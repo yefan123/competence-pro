@@ -1,0 +1,64 @@
+body {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    width: 100%;
+    height: 90%;
+    justify-content: center;
+    align-items: center;
+}
+
+#main {
+    font-size: 17px;
+    padding: 50px;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+[data-info] {
+    margin: 10px;
+}
+
+/* logo */
+
+[data-info]>span:first-child {
+    display: inline-block;
+    color: gray;
+}
+
+#alterMyself {
+    float: right;
+}
+
+#branchSelector {
+    width: 100px;
+}
+
+footer {
+    height: 10%;
+}
+
+button.fa-times {
+    margin-left: 5px;
+}
+
+#addLeaderEditor .branchList {
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    position: fixed;
+    height: 10%;
+}
+
+#editor .innerEditor label {
+    width: 150px;
+}

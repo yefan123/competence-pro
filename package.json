@@ -1,0 +1,29 @@
+{
+  "name": "skill-grid-system",
+  "version": "2.1.8",
+  "description": "web-based employee's competence assessment",
+  "main": "index.js",
+  "scripts": {
+    "start": "sudo NODE_ENV=production pm2 start index.js --name 'assessment'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JinHengyu/PED-CompetenceReckon.git"
+  },
+  "author": "恒星",
+  "license": "GNU",
+  "bugs": {
+    "url": "https://github.com/JinHengyu/PED-CompetenceReckon/issues"
+  },
+  "homepage": "https://github.com/JinHengyu/PED-CompetenceReckon#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "connect-mongo": "^2.0.1",
+    "ejs": "latest",
+    "express": "latest",
+    "express-session": "latest",
+    "mongodb": "latest",
+    "sha1": "latest"
+  },
+  "devDependencies": {}
+}

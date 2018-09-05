@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/radar.css" />
+</head>
+
+<body>
+
+
+    <div id="main"></div>
+
+
+    <script src="/js/radar.js"></script>
+
+
+
+    <script>
+        const main = document.querySelector('#main')
+        window.initAll = (radarList) => {
+            main.innerHTML = ''
+            for (let radar of radarList) {
+                let container = document.createElement('div')
+                container.classList.add('draw')
+                main.appendChild(container)
+
+
+                window.RADAR.init(container, {
+                    data: {
+                        maxValue: radar.maxValue,
+                        description: radar.description,
+                        inner: radar.inner
+                    },
+                    config: {
+                        scale: 1,
+                        showTooltip: true,
+                        tooltip: {
+                            offsetY: 0,
+                            offsetX: 0,
+                            r: 5
+                        },
+                        dataCircle: {
+                            // 节点
+                            r: 5,
+                            fillStyle: "transparent",
+                        },
+                        bg: {
+                            // 由内到外的层数
+                            layer: 7,
+                            evenFillStyle: "#fff",
+                            oddFillStyle: "rgba(0,0,0,0.1)",
+                            axisColor: "rgba(0,0,0,0.5)"
+                        }
+                        // 雷达图半径(默认自适应)
+                        // radius: 300
+                    }
+                })
+
+
+
+
+
+
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

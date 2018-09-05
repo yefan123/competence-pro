@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/img/favicon.png" type="image/png" sizes="48x48">
+    <link rel="stylesheet" type="text/css" href="/public.css">
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
+    <link rel="stylesheet" href="/fontawesome-free-5.1.0-web/css/all.css">
+</head>
+
+<body>
+
+    <header>
+        <br>
+        <br>
+        <h1>Skill Grid System </h1>
+        <br>
+        <!-- 直接使用global就行了,不用传参了.. -->
+        <h2>
+            <%- global.pkg.version %>
+        </h2>
+    </header>
+
+
+
+
+
+    <!-- https://code.google.com/archive/p/crypto-js/ -->
+
+
+
+
+
+    <div id="error"></div>
+
+
+
+
+
+    <div id="main">
+        <div id="form">
+            <br>
+            <div>
+                <label class="fas fa-fingerprint"></label>
+                <input id="username" tabindex="1" autofocus="autofocus" placeholder="username" type="text" name="username">
+            </div>
+            <br>
+            <div>
+                <label class="fas fa-key"></label>
+                <input id='password' tabindex="2" placeholder="password" type="password">
+            </div>
+            <br>
+            <div>
+                <label class="fas fa-sign-in-alt"></label>
+                <button id="submit" tabindex="3" onclick="submit()">
+                    <span>LOGIN</span>
+                    <i class="fas fa-reply"></i>
+                </button>
+            </div>
+            <!-- 没有name属性的表单将不被传输 -->
+
+        </div>
+    </div>
+
+
+
+    <footer>
+        <br> developed by
+        <a target="_blank" href="https://github.com/JinHengyu">Jim</a>
+    </footer>
+
+
+
+    <script src="/CryptoJS/rollups/sha1.js"></script>
+    <script src="/js/login.js"></script>
+
+
+    <%# 输出非转义的数据到模板 %>
+        <%- 
+            msg?
+                `<script>emitError('${msg}')</script>`:''
+    %>
+
+</body>
+
+</html>

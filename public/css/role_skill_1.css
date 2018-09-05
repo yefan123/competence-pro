@@ -1,0 +1,168 @@
+aside#roleListAside {
+    padding: 20px 0;
+    position: fixed;
+    z-index: 2;
+    width: 15%;
+    left: 0;
+    /* 限定高度 */
+    bottom: 0;
+    top: 0;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+}
+
+aside#roleListAside button[data-role] {
+    width: 100%;
+    display: block;
+    padding: 3px 0;
+    font-size: 17px;
+    background: white;
+}
+
+aside#roleListAside button[data-role]:hover::before {
+    /* long-arrow-alt-right */
+    content: "\f30b\ ";
+    color: blue;
+}
+
+.main {
+    position: fixed;
+    bottom: 0;
+    width: 81%;
+    left: 1%;
+    right: 1%;
+    background: transparent;
+    top: 0;
+    overflow: scroll;
+    z-index: 5;
+}
+
+#head {
+    height: 50px;
+    background: rgba(255, 255, 255, 1);
+    display: flex;
+    flex-direction: row;
+    float: left;
+}
+
+#head>div {
+    background: rgba(255, 255, 255, 1);
+    height: 50px;
+    line-height: 50px;
+    color: #aaa;
+    font-size: 16px;
+}
+
+.role_aim {
+    margin: 0;
+    width: 150px;
+}
+
+.row {
+    position: relative;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1px;
+    width: -moz-fit-content;
+    width: fit-content;
+}
+
+.row>div {
+    height: 50px;
+    line-height: 50px;
+}
+
+.row>div:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.row>div:nth-child(even) {
+    background: rgba(0, 0, 0, 0.1);
+    color: rgba(255, 255, 255, 0.8)
+}
+
+.skill-name {
+    width: 250px;
+    border: none;
+    line-height: 50px;
+    overflow: hidden;
+}
+
+aside#role-detail {
+    padding-top: 10px;
+    position: fixed;
+    top: 0;
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5)
+}
+
+#role-detail>[data-detail] {
+    font-size: 15px;
+    margin: 10px 0;
+    width: 70%;
+}
+
+#role-detail>[data-detail]>* {
+    height: 25px;
+}
+
+#role-detail .left {
+    font-size: 14px;
+}
+
+#role-detail .right {
+    font-size: 14px;
+}
+
+.desc {
+    width: 600px;
+    overflow: hidden;
+}
+
+#grid-data {
+    float: left;
+}
+
+/* 添加用户 */
+
+aside#roleListAside button.fas.fa-user-plus {
+    position: absolute;
+    bottom: 20px;
+    font-size: 20px;
+    background: lime;
+    padding: 5px 8px;
+    border-radius: 5px;
+}
+
+.my_aim_sum {
+    width: 150px;
+}
+
+.r_sum {
+    width: 150px;
+}
+
+#radarFrame {
+    position: fixed;
+    top: 0;
+    z-index: 6;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.fas.fa-chart-pie {
+    font-size: 100px;
+    margin: 20px 0;
+}
+
+.row.specific_class {
+    color: red;
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Skill Grid System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/img/favicon.png" type="image/png" sizes="48x48">
+    <link rel="stylesheet" type="text/css" media="screen" href="/public.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/outer.css" />
+    <link rel="stylesheet" href="/fontawesome-free-5.1.0-web/css/all.css">
+
+</head>
+
+<body>
+
+
+    <header>
+
+
+
+        <div id="menu">
+            <button class="fas fa-home" id="indexBtn" onclick="switchInner('/view/index',this)">HOME</button>
+            <button class="fas fa-pen-square" id="people_skill_btn" onclick="switchInner('/view/people_skill_0',this)">people/skill</button>
+            <button class="fab fa-linode" id="people_type_btn" onclick="switchInner('/view/people_type_2',this)">people/type</button>
+            <button class="fab fa-linode" id="role_skill_btn" onclick="switchInner('/view/role_skill_1',this,['staff'])">role/skill</button>
+            <button class="fab fa-linode" id="role_type_btn" onclick="switchInner('/view/role_type_3',this,['staff'])">role/type</button>
+            <button class="fas fa-pen-square" id="target_btn" onclick="switchInner('/view/target',this,['staff'])">target</button>
+
+        </div>
+
+
+        <div class="separator"></div>
+
+        <div id="user-info">
+            <div class="fas fa-user-graduate">
+                <%- user.name %>
+            </div>
+
+            <div class="fas fa-code-branch">
+                <%= user.branch %>
+            </div>
+
+            <button class=" fas fa-sign-out-alt" onclick='location.href="/log?logout=1"'>
+                logout
+            </button>
+        </div>
+
+
+
+    </header>
+
+
+
+
+
+    <iframe seamless src="">
+
+    </iframe>
+
+
+
+
+
+    <script src="/public.js"></script>
+    <script src="/js/outer.js"></script>
+
+</body>
+
+</html>

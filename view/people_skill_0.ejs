@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>people/skill</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/people_skill_0.css" />
+    <link rel="stylesheet" href="/fontawesome-free-5.1.0-web/css/all.css">
+
+
+
+
+
+</head>
+
+
+<body>
+
+
+
+
+    <!-- 左侧边栏 -->
+    <aside id="peopleList" class="hidden">
+
+        <button class="fas fa-user-plus" onclick="openEditor('add')"> ADD</button>
+
+
+        <!-- by ajax -->
+
+    </aside>
+
+
+
+    <!-- 右侧边栏 -->
+    <aside id="people-detail" class="">
+        <div data-detail="name" class="fas fa-user">
+        </div>
+        <div data-detail="username" class="fas fa-fingerprint">
+        </div>
+        <div data-detail="branch" class="fas fa-code-branch">
+        </div>
+        <div data-detail="role" class="fas fa-tag">
+        </div>
+
+
+        <button id="switchUserBtn" onclick="switchUser(currentPeo)">login</button>
+
+        <button id="radarToggler" class="fas fa-chart-pie" onclick="toggleRadar(6)"></button>
+
+        <div id="skill_desc"></div>
+
+        <button id="dropPeople" class="fas fa-trash-alt" onclick="dropPeople(currentPeo)"> Drop</button>
+    </aside>
+
+
+
+
+
+    <iframe class="none" id="radarFrame" src="/view/radar" height="100%" width="98%"></iframe>
+
+
+    <div class="main">
+
+
+
+
+
+
+
+        <div id="head" class="row">
+
+
+            <div class="skill-name">competence</div>
+            <div class="target">role target</div>
+            <div class="my_aim fas fa-pen-square"> my target</div>
+            <div class="r fas fa-pen-square"> actual</div>
+            <div class="a fas fa-sort"> action</div>
+            <div class="s fas fa-sort"> action status</div>
+            <div class="detail fas fa-pen-square"> action detail</div>
+            <div class="c"> comment</div>
+
+        </div>
+
+        <div id="grid-data">
+
+
+            <!-- 由ajax生成people数据 -->
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+    <div id="editor" onclick='this.style.display="none"'>
+        <div id="updateEditor" class="innerEditor">
+            <div>
+                <label>Skill :</label>
+                <input type='text' class="skill" readonly>
+            </div>
+            <div>
+                <label for="">My Target :</label>
+                <input type='number' min="0" max="5" step="0.5" class="my_aim">
+            </div>
+            <div>
+                <label for="">Actual :</label>
+                <input type='number' min="0" max="5" step="0.5" class="r">
+            </div>
+            <div>
+                <label for="">Action :</label>
+                <select class="a">
+                    <option value="On Job Trainning">On Job Trainning</option>
+                    <option value="Class Room Trainning">Class Room Trainning</option>
+                    <option value="Self Learning">Self Learning</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+            <div>
+                <label >Action Status:</label>
+                <select class="s">
+                    <option value="open">open</option>
+                    <option value="planned">planned</option>
+                    <option value="ongoing">ongoing</option>
+                    <option value="closed">closed</option>
+                </select>
+            </div>
+            <div>
+                <label for="">Action Detail :</label>
+                <textarea type="text" class="detail"></textarea>
+            </div>
+            <div>
+                <label>Comment :</label>
+                <textarea type="text" class="c"></textarea>
+            </div>
+            <span class="loading"></span>
+            <br>
+            <button onclick='sendUpdate()' class='submit left'>Submit</button>
+            <button onclick='editor.click()' class='cancel right'>Cancel</button>
+        </div>
+
+        <div id="addEditor" class="innerEditor">
+            <label for="">name :</label>
+            <input type='text' class="name">
+            <br>
+            <label for="">username :</label>
+            <input type='text' class="username">
+            <br>
+            <label for="">password :</label>
+            <input type='password' class="password">
+            <br>
+            <label for="">branch :</label>
+            <input type='text' class="branch" readonly>
+            <br>
+            <label for="">role :</label>
+            <select type='text' class="role">
+                <%-
+                    global.roleList.filter(r=>r.branch===user.branch).map(r=>`<option value="${r.name}">${r.name}</option>`)
+                %>
+            </select>
+            <br>
+            <span class="loading"></span>
+            <br>
+            <button onclick="sendAdd()" class="submit left">Submit</button>
+            <button onclick='editor.click()' class='cancel right'>Cancel</button>
+        </div>
+    </div>
+
+
+
+
+    <script src="/public.js"></script>
+    <script src="/js/people_skill_0.js"></script>
+
+
+    <script>
+        <%- 
+
+            (function(){
+
+                if(user.level==='staff'){
+                    return `openNormalBoard()`
+                }else if(user.level==='leader'){
+                    return `openLeaderBoard()`
+                }else if(user.level==='boss'){
+                    return `openBossBoard()`
+                }
+                
+            })();
+        %>
+    </script>
+
+
+
+</body>
+
+</html>

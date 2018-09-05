@@ -1,0 +1,239 @@
+aside#peopleList {
+    padding: 20px 0;
+    position: fixed;
+    z-index: 2;
+    width: 15%;
+    left: 0;
+    /* 限定高度 */
+    bottom: 0;
+    top: 0;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    overflow-x: visible;
+}
+
+aside#peopleList button[data-people_id] {
+    width: 100%;
+    display: block;
+    padding: 3px 0;
+    font-size: 17px;
+}
+
+aside#peopleList button[data-people_id]:hover::before {
+    /* long-arrow-alt-right */
+    content: "\f30b\ ";
+    color: blue;
+    overflow: visible;
+    white-space: nowrap;
+}
+
+.main {
+    position: fixed;
+    bottom: 0;
+    width: 81%;
+    left: 1%;
+    right: 1%;
+    background: transparent;
+    top: 0;
+    overflow: scroll;
+    z-index: 5;
+}
+
+#head {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    height: 50px;
+    background: rgba(255, 255, 255, 1);
+    display: flex;
+    flex-direction: row;
+    float: left;
+}
+
+#head>div {
+    background: rgba(255, 255, 255, 1);
+    height: 50px;
+    line-height: 50px;
+    color: #aaa;
+    font-size: 16px;
+}
+
+#head .v,
+#head .target {
+    margin: 0;
+    width: 150px;
+}
+
+.row {
+    position: relative;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1px;
+}
+
+.row>div {
+    height: 50px;
+    line-height: 50px;
+}
+
+.skill-name {
+    width: 250px;
+    border: none;
+    line-height: 50px;
+    background: rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+}
+
+aside#people-detail {
+    padding: 10px 15px;
+    position: fixed;
+    top: 0;
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5)
+}
+
+#people-detail>[data-detail] {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+#people-detail>[data-detail]>* {
+    height: 25px;
+}
+
+#people-detail .left {
+    font-size: 25px;
+}
+
+#people-detail .right {
+    font-size: 20px;
+}
+
+#submit {
+    float: left;
+    margin: 5px;
+}
+
+#dropPeople {
+    background: red;
+    border-radius: 5px;
+    padding: 5px 8px;
+    font-size: 20px;
+    position: absolute;
+    bottom: 20px;
+    align-self: center;
+}
+
+.revisable {
+    border: 1px solid transparent;
+}
+
+.revisable:hover {
+    cursor: pointer;
+    border: 1px solid black;
+    overflow: visible;
+}
+
+.row .a {
+    width: 200px;
+}
+
+.row .s {
+    width: 200px;
+}
+
+.row .detail {
+    width: 300px;
+}
+
+.desc {
+    width: 600px;
+    overflow: hidden;
+}
+
+#grid-data {
+    float: left;
+    position: absolute;
+    top: 50px;
+    left: 0;
+}
+
+/* 添加用户 */
+
+aside#peopleList button.fas.fa-user-plus {
+    position: absolute;
+    bottom: 20px;
+    font-size: 20px;
+    background: lime;
+    padding: 5px 8px;
+    border-radius: 5px;
+}
+
+.row .role_aim {
+    width: 150px;
+}
+
+.row .my_aim {
+    width: 150px;
+}
+
+.row .r {
+    width: 150px;
+}
+
+.row .c {
+    width: 300px;
+}
+
+.row>div:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.row>div:nth-child(even) {
+    background: rgba(0, 0, 0, 0.1);
+    color: rgba(255, 255, 255, 0.8)
+}
+
+#radarFrame {
+    position: fixed;
+    top: 0;
+    z-index: 6;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.fas.fa-chart-pie {
+    font-size: 100px;
+    margin: 20px 0;
+    align-self: center;
+}
+
+input[type=text],
+select {
+    width: 120px;
+}
+
+.row.specific_class {
+    color: red;
+}
+
+.leader {
+    color: orange;
+}
+
+.leader::before {
+    content: '['
+}
+
+.leader::after {
+    content: ']'
+}

@@ -1,0 +1,170 @@
+* {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    /* display: flex; */
+    /* overflow: hidden; */
+}
+
+body {
+    background: transparent;
+    font-family: "幼圆", "华文细黑", "Helvetica Neue", Helvetica, serif, Tahoma, "Droid Sans", "wenquanyi micro hei", Arial, "宋体", "黑体", sans-serif;
+    font-size: 16px;
+    text-align: center;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 75px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    background: rgba(255, 255, 255, 0.5)
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    right: 10%;
+    height: 150px;
+    border-top: 1px solid black;
+}
+
+a {
+    display: block;
+    color: purple;
+    text-decoration: none;
+}
+
+a:hover {
+    color: blue;
+}
+
+.fa-sort-down {
+    position: absolute;
+    /* 防止被点到 */
+    z-index: -1;
+    bottom: 0;
+    line-height: normal;
+    width: 10%;
+    left: 45%;
+    font-size: 30px;
+}
+
+.none {
+    display: none;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.invertColor {
+    filter: invert(100%)
+}
+
+button {
+    color: purple;
+    cursor: pointer;
+    display: inline-block;
+    background: transparent;
+    border: none;
+}
+
+button:hover {
+    color: blue;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+input,
+textarea,
+select {
+    padding: 4px 6px;
+    margin: 4px 0;
+    border-radius: 4px;
+}
+
+[readonly] {
+    cursor: not-allowed;
+}
+
+.loading {
+    cursor: wait;
+}
+
+#editor {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 7;
+    background: rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.editor-title {
+    color: gray;
+    font-size: 20px;
+    display: block;
+}
+
+#editor label,
+#editor input,
+#editor select {
+    width: 120px;
+    display: inline-block;
+}
+
+.innerEditor {
+    background: #eee;
+    padding: 20px 30px;
+    border-radius: 4px;
+    display: none;
+}
+
+.row.specific_skill {
+    filter: brightness(120%)
+}
+
+.specific_class {
+    color: red;
+}
+
+.active {
+    background: black;
+    color: white;
+}
+
+.innerEditor>div {
+    /* 会将子元素全部变成block? */
+    display: flex;
+}
+
+.fas::before,
+.far::before,
+.fab::before {
+    margin-right: 10px;
+}
+
+.fas::after,
+.far::after,
+.fab::after {
+    margin-left: 10px;
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>role-competence-assessment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/public.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/role_skill_1.css" />
+    <link rel="stylesheet" href="/fontawesome-free-5.1.0-web/css/all.css">
+
+
+
+
+
+</head>
+
+
+<body>
+
+
+
+
+    <!-- 左侧边栏 -->
+    <aside id="roleListAside" class="hidden">
+
+        <!-- by ajax -->
+
+    </aside>
+
+
+
+    <!-- 右侧边栏 -->
+    <aside id="role-detail">
+        <div data-detail="name">
+            <i class="left fas fa-indent"></i>
+            <span class="right"></span>
+        </div>
+        <div data-detail="number">
+            <i class="left fas fa-users"></i>
+            <span class="right"></span>
+        </div>
+
+
+
+        <button id="radarToggler" class="fas fa-chart-pie" onclick="toggleRadar(6)"></button>
+
+
+        <!-- <button id="dropStaff" class="fas fa-trash-alt" onclick="dropStaff()"> Drop</button> -->
+    </aside>
+
+
+
+
+
+    <iframe class="none" id="radarFrame" src="/view/radar" height="100%" width="98%"></iframe>
+
+
+    <div class="main">
+
+
+
+
+
+
+
+        <div id="head">
+
+
+            <div class="skill-name">competence</div>
+            <div class="role_aim">role target</div>
+            <div class="my_aim_sum">my target sum</div>
+            <div class="r_sum">actual sum</div>
+            <!-- <div class="actions">actions</div> -->
+            <div class="desc">descrption</div>
+
+        </div>
+
+        <div id="grid-data">
+
+
+            <!-- 由ajax生成staff数据 -->
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+    <script src="/public.js"></script>
+    <script src="/js/role_skill_1.js"></script>
+
+
+
+
+
+</body>
+
+</html>
