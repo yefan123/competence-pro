@@ -7,15 +7,24 @@ const url = global.cfg.mongoUrl;
 // 此处看似里入口(index.js)好远(两次跳转), 但仍然属于同步流, 执行先于较早定义的异步函数
 
 module.exports = {
-        // 用对象取代零碎参数   // 模型层规范
-        login: user => new Promise((resolve, reject) => {
-                db.collection("people").findOneAndUpdate(user, {$set:{lastLogin:new Date()}}, (err, people) => {
-                    if (err) reject(err);
-                    // 否则返回null
-                    else resolve(people.value)
-                });
+    login: user => new Promise((res, rej) => {
+        // 更新并返回更新前的数据
+        db.collection("people").findOneAndUpdate(user, {
+            $set: {
+                last: new Date()
+            }
+        }, {
+            returnOriginal: true
+        }, (err, result) => {
+            if (err) rej(err);
+            // 否则返回null
+            else res({
+                user: result.value
+            })
+        });
 
-        }),
+    }),
+
 
     // 因为logout()不需要和db交互, 所以止步于路由层
 
@@ -23,16 +32,22 @@ module.exports = {
 
 
 
-    findList: (find, projection, limit, skip) => new Promise((resolve, reject) => {
-        db.collection("people").find(find).project(projection).toArray((err, list) => {
-            if (err) reject(err);
-            else resolve(list)
+    findMany: info => new Promise((res, rej) => {
+        const options = {
+            skip: info.skip || 0,
+            limit: info.limit || undefined,
+            proj: info.proj || undefined,
+            sort: info.sort || undefined
+        }
+        global.db.collection("people").find(info.where, options).toArray((err, list) => {
+            if (err) rej(err);
+            else res(list)
         });
 
     }),
 
 
-    findOne: (where, projection, limit, skip) => new Promise((resolve, reject) => {
+    findOne: (where, proj, limit, skip) => new Promise((resolve, reject) => {
         db.collection('people').findOne(where, (err, people) => {
             if (err) reject(err);
             else resolve(people)
@@ -41,16 +56,19 @@ module.exports = {
 
 
 
-    updateOne: (where, update) => new Promise((resolve, reject) => {
-        db.collection('people').updateOne(where, update, (err, log) => {
+    updateOne: ({
+        where,
+        up
+    }) => new Promise((resolve, reject) => {
+        db.collection('people').updateOne(where, up, (err, log) => {
             log.__proto__.toJSON = undefined
             if (err) reject(err);
             else resolve(log)
         })
     }),
 
-    updateMany: (where, update) => new Promise((resolve, reject) => {
-        db.collection('people').updateMany(where, update, (err, log) => {
+    updateMany: (where, up) => new Promise((resolve, reject) => {
+        db.collection('people').updateMany(where, up, (err, log) => {
             log.__proto__.toJSON = undefined
             if (err) reject(err)
             else resolve(log)

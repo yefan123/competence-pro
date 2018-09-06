@@ -4,42 +4,30 @@
 
 
 
-    global.path = require('path')
     global.session = require('express-session');
     global.mongoStore = require('connect-mongo')(session)
 
 
-    global.cfg = require('./config')
-    global.pkg = require('./package')
+    global.cfg = require('./config.js')
 
     global.app = require('express')()
 
     global.checkLogin = require('./tool/checkLogin')
     global.validator = require('./tool/validator')
 
+    global.model = {
+        peo: require('./model/peopleModel'),
+        role: require('./model/roleModel'),
+        type: require('./model/typeModel')
+    }
 
 
-    global.mongoClient = require('mongodb').MongoClient;
 
 
 
-    global.refreshRoleList = () => new Promise((resolve, reject) => {
-        require('./model/roleModel').find({}).then(list => {
-            global.roleList = list
-            resolve()
-        })
-    })
-
-    global.refreshTypeList = () => new Promise((resolve, reject) => {
-        require('./model/typeModel').find({}).then(list => {
-            global.typeList = list
-            resolve()
-        })
-    })
-
-    global.refreshBranchList = () => new Promise((resolve, reject) => {
-        require('./model/roleModel').distinct('branch').then(list => {
-            global.branchList = list
+    global.refreshDeptList = () => new Promise((resolve, reject) => {
+        model.role.distinct('dept').then(list => {
+            global.deptList = list
             resolve()
         })
     })
@@ -56,13 +44,11 @@
     }
 
     // connection pool
-    mongoClient.connect(cfg.mongo.url, options, function (err, client) {
+    require('mongodb').MongoClient.connect(cfg.mongo.url, options, function (err, client) {
         if (err) throw err;
         // 全局的连接池?
         global.db = client.db(cfg.mongo.db)
-        refreshRoleList()
-        refreshTypeList()
-        refreshBranchList()
+        refreshDeptList()
     });
 
 
@@ -73,12 +59,16 @@
     // 开始路由
     require('./route')(app);
 
+    Date.prototype.toJSON = function () {
+        // 返回number
+        return this.getTime()
+    }
 
     // 成功申请监听端口以后执行回调
-    app.listen(cfg.port, function () {
+    app.listen(cfg.server.port, function () {
         // sudo node index.js才能在80端口下运行
         console.log(`running @ :
-            http://localhost:${cfg.port}`)
+            http://localhost:${cfg.server.port}`)
     })
 
 })();

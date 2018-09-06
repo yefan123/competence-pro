@@ -1,24 +1,22 @@
 (function init() {
-    window.sendAjax = function (method, url, data) {
-        return new Promise((resolve, reject) => {
+    window.sendFetch = ({
+        url,
+        body
+    }) => fetch(url, {
+        body: JSON.stringify(body),
+        // 统一统一
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        credentials: 'include'
+    }).then(res => res.json())
 
-            let ajax = new XMLHttpRequest();
-            ajax.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    let data = JSON.parse(this.responseText)
-                    resolve(data)
-                }
-            };
-            ajax.open(method, url, true);
-            ajax.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            ajax.send(JSON.stringify(data));
-        })
+    window.dom = {
+        pass: document.querySelector('#password'),
+        usern: document.querySelector('#username'),
+        error: document.querySelector('#error')
     }
-
-
-    window.passwordInput = document.querySelector('#password')
-    window.usernameInput = document.querySelector('#username')
-    window.errorMsg = document.querySelector('#error')
 
 
 
@@ -29,7 +27,7 @@
 })();
 
 function emitError(msg) {
-    errorMsg.innerHTML = msg
+    dom.error.innerHTML = msg
     console.warn(msg)
     alert(msg)
 }
@@ -39,23 +37,30 @@ function emitError(msg) {
 function submit() {
 
 
-    let username = usernameInput.value
-    let password = passwordInput.value
-    if (username !== '' && password !== '') {
-        let cryptedPas = CryptoJS.SHA1(password).toString()
+    let usern = dom.usern.value
+    let pass = dom.pass.value
+    if (usern !== '' && pass !== '') {
+        pass = CryptoJS.SHA1(pass).toString()
         let user = {
-            username,
-            cryptedPas
+            usern,
+            pass
         }
 
 
-        window.sendAjax('POST', '/log?login=1', {
+        window.sendFetch({
+            url: '/log?login=1',
+            body: {
+                user
+            }
+        }).then(({
+            msg,
             user
-        }).then(res => {
-            if (res.msg == 'ok') {
-                location.href = '/app'
+        }) => {
+            if (msg == 'ok') {
+                localStorage.setItem('user', JSON.stringify(user))
+                location.href = '/main'
             } else {
-                emitError(res.msg)
+                emitError(msg)
             }
         })
 

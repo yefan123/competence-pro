@@ -2,7 +2,7 @@
 module.exports = function route(app) {
 
     // 放在session中间件之前, 因为public资源不需要session
-    app.use(require('express').static(path.join(__dirname, 'public')))
+    app.use(require('express').static(__dirname + '/public'))
 
     app.use(session({
         name: cfg.session.key, // 设置 cookie 中保存 session id 的字段名称
@@ -26,11 +26,8 @@ module.exports = function route(app) {
     // 入口
     app.use('/', require('./router/viewListener'))
     app.use('/view', require('./router/viewListener'))
-
-    // app.use('/entry', require('./router/entryListener'))
-    // 因为比'/login'上一个url匹配'/'更特定, 更优先, 和代码书写顺序无关
-    // app.use('/about', require('./router/aboutListener'))
-    app.use('/update', require('./router/updateListener'))
+    app.use('/set', require('./router/setListener'))
+    app.use('/addDrop', require('./router/addDropListener'))
     app.use('/data', require('./router/dataListener'))
     app.use('/log', require('./router/logListener'))
 

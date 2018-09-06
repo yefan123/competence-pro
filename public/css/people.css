@@ -1,0 +1,118 @@
+aside#peoList {
+    padding: 20px 0;
+    position: fixed;
+    z-index: 2;
+    width: 15%;
+    left: 0;
+    /* 限定高度 */
+    bottom: 0;
+    top: 0;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    overflow-x: visible;
+}
+
+aside#peoList button[data-peo_id] {
+    width: 100%;
+    display: block;
+    padding: 3px 0;
+    font-size: 17px;
+    text-align: left;
+    padding-left: 20px;
+}
+
+aside#peoList button[data-peo_id]:hover::before {
+    /* long-arrow-alt-right */
+    content: "\f30b\ ";
+    color: blue;
+    overflow: visible;
+    white-space: nowrap;
+}
+
+.main {
+    position: fixed;
+    bottom: 0;
+    width: 68%;
+    left: 16%;
+    right: 1%;
+    background: transparent;
+    top: 0;
+    overflow: scroll;
+    z-index: 5;
+}
+
+aside#curr {
+    padding: 10px 15px;
+    position: fixed;
+    top: 0;
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5)
+}
+
+#curr>[data-curr] {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+#curr>[data-curr]>* {
+    height: 25px;
+}
+
+#curr .left {
+    font-size: 25px;
+}
+
+#curr .right {
+    font-size: 20px;
+}
+
+#send {
+    float: left;
+    margin: 5px;
+}
+
+#setPeo {
+    background: red;
+    border-radius: 5px;
+    padding: 5px 8px;
+    font-size: 20px;
+    position: absolute;
+    bottom: 20px;
+    align-self: center;
+}
+
+/* 添加用户 */
+aside#peoList button.fas.fa-user-plus {
+    position: absolute;
+    bottom: 20px;
+    font-size: 20px;
+    background: lime;
+    padding: 5px 8px;
+    border-radius: 5px;
+}
+
+#radarFrame {
+    position: fixed;
+    top: 0;
+    z-index: 6;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.fas.fa-chart-pie {
+    font-size: 100px;
+    margin: 20px 0;
+    align-self: center;
+}
+
+input[type=text],
+select {
+    width: 120px;
+}

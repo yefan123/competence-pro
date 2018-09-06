@@ -6,8 +6,8 @@ const express = require('express')
 const router = express.Router()
 const ObjectID = require('mongodb').ObjectID
 const peopleModel = require('../model/peopleModel')
-const skillModel = require('../model/skillModel')
 const roleModel = require('../model/roleModel')
+const typeModel = require('../model/typeModel')
 
 // // 因为post的body默认是没有格式的
 // const bodyParser = require("body-parser").urlencoded({
@@ -23,7 +23,7 @@ const roleModel = require('../model/roleModel')
 
 // 这里的'/'是根据是上一层的路径
 // 比如上一次是'/test',这里也是'/test',最终匹配的就是/test/test
-router.all('/', middleware)
+router.all('/', checkLogin, middleware)
 
 
 
@@ -31,86 +31,113 @@ router.all('/', middleware)
 
 function middleware(req, res, next) {
 
+    const user = req.session.user
+
     switch (req.query.get) {
         // myself
         case 'user':
             {
-                res.json(req.session.user)
+                res.json(user)
                 break;
             }
-        case 'peopleList':
+        case 'peoList':
             {
-                if (req.session.user.level !== 'staff')
-                    peopleModel.findList({
-                        branch: req.session.user.branch
-                    }, {
+                // 没有peopleListBrief,因为已经部门过滤
+                if (user.level == 'staff') return
+                model.peo.findMany({
+                    where: {
+                        dept: user.dept
+                    },
+                    projection: {
                         _id: 1,
                         name: 1,
-                        username: 1,
-                        role: 1,
+                        usern: 1,
+                        r_id: 1,
                         skill: 1,
                         level: 1
-                    }).then(list => res.json(list))
-
+                    }
+                }).then(list => res.json({
+                    msg: 'ok',
+                    list,
+                }))
 
                 break;
             }
-        case 'people':
-            {
-                peopleModel.findOne({
-                    _id: ObjectID(req.query._idStr)
-                }).then(people => {
-                    if (people) {
+            // case 'people':
+            //     {
+            //         peopleModel.findOne({
+            //             _id: ObjectID(req.query._idStr)
+            //         }).then(people => {
+            //             if (people) {
 
-                        res.json(people)
-                    } else res.status(404).end()
+            //                 res.json(people)
+            //             } else res.status(404).end()
 
-                })
-                break;
-            }
-        case 'skillList':
-            {
-                let project = {
-                    class: 1,
-                    name: 1,
-                    desc: 1,
-                    target: 1,
-                    type: 1,
-                    _id: 0
-                }
-                if (req.session.user.level == 'staff') {
-                    let token = `target.${req.session.user.role}`
-                    project[token] = 1
-                }
-
-
-                skillModel.find({}, project).then(list => {
-                    res.json(list)
-                })
-
-
-
-                break;
-
-            }
+            //         })
+            //         break;
+            //     }
         case 'roleList':
             {
-                res.json(global.roleList.filter(r => r.branch == req.session.user.branch))
+                roleModel.findMany({
+                    where: {
+                        dept: user.dept
+                    }
+                }).then(({
+                    list
+                }) => {
+                    res.json({
+                        msg: 'ok',
+                        list
+                    })
+                })
+                break
+            }
+        case 'role':
+            {
+                let role = req.body.role
+                roleModel.findOne({
+                    role
+                }).then(({
+                    role
+                }) => {
+                    if (role) {
+                        res.json({
+                            msg: 'ok',
+                            role
+                        })
+                    } else {
+                        res.json({
+                            msg: 'not found'
+                        })
+                    }
+                })
+                break
+            }
+        case 'deptList':
+            {
+                // 注意,是字符串不是对象
+                res.json({
+                    list: global.deptList
+                })
                 break
             }
         case 'typeList':
             {
-                res.json(global.typeList)
-                break
-            }
-        case 'branchList':
-            {
-                // 注意,是字符串不是对象
-                res.json(global.branchList)
+                model.type.findMany({
+                    where: {}
+                }).then(list => {
+                    res.json({
+                        msg: 'ok',
+                        list
+                    })
+                })
                 break
             }
         default:
-            break;
+            {
+                res.status(404).end()
+                break;
+            }
 
     }
 }

@@ -13,10 +13,24 @@ module.exports = {
 
 
 
-    find: (find, projection, limit, skip) => new Promise((resolve, reject) => {
-        global.db.collection("role").find(find).project(projection).toArray((err, list) => {
-            if (err) throw err;
-            resolve(list)
+    findMany: ({
+        where,
+        projection,
+        skip,
+        limit,
+        sort
+    }) => new Promise((res, rej) => {
+        const options = {
+            skip: skip || 0,
+            limit: limit || undefined,
+            projection: projection || undefined,
+            sort: sort || undefined
+        }
+        global.db.collection("role").find(where, options).toArray((err, list) => {
+            if (err) rej(err);
+            else res({
+                list
+            })
         });
 
     }),

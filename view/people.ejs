@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>people</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/public.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/people.css" />
+    <link rel="stylesheet" href="/fontawesome/css/all.css">
+
+
+</head>
+
+
+<body>
+
+
+
+
+    <!-- 左侧边栏 -->
+    <aside id="peoList" class="hidden">
+
+        <button class="fas fa-user-plus" onclick="openEdi('addPeo')"> Add</button>
+
+
+        <!-- by ajax -->
+
+    </aside>
+
+
+
+    <!-- 右侧边栏 -->
+    <!-- proxy同步 -->
+    <aside id="curr">
+        <div data-curr="peo_name" class="fas fa-user">
+        </div>
+        <div data-curr="peo_usern" class="fas fa-fingerprint">
+        </div>
+        <div data-curr="role_name" class="fas fa-tag">
+        </div>
+
+        <button id="radarToggler" class="fas fa-chart-pie" onclick="toggleRadar(6)"></button>
+
+        <div id="skill_desc"></div>
+
+        <button id="setPeo" class="fas fa-cog" onclick="openEdi('setPeo')"> Set</button>
+    </aside>
+
+
+
+
+
+    <div id="table" class="main ag-theme-material">
+
+
+
+
+
+
+    </div>
+
+
+
+    <div id="edi" onclick='this.style.display="none"' class="none">
+
+        <div data-edi="setRow" class="innerEdi">
+            <div>
+                <label for="">Personal Target :</label>
+                <input type='number' min="0" max="5" step="1" class="my_tar">
+            </div>
+            <div>
+                <label for="">Actual :</label>
+                <input type='number' min="0" max="5" step="1" class="real">
+            </div>
+            <div>
+                <label for="">Action :</label>
+                <select class="act">
+                    <option value="On Job Trainning">On Job Trainning</option>
+                    <option value="Class Room Trainning">Class Room Trainning</option>
+                    <option value="Self Learning">Self Learning</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+            <div>
+                <label>Action Status:</label>
+                <select class="act_sta">
+                    <option value="open">open</option>
+                    <option value="planned">planned</option>
+                    <option value="ongoing">ongoing</option>
+                    <option value="closed">closed</option>
+                </select>
+            </div>
+            <div>
+                <label>Action Detail :</label>
+                <textarea type="text" class="act_de"></textarea>
+            </div>
+            <div>
+                <label>Comment :</label>
+                <textarea type="text" class="comm"></textarea>
+            </div>
+            <button onclick='sendSetRow()' class='submit left'>Submit</button>
+            <button onclick='dom.edi.click()' class='cancel right'>Cancel</button>
+        </div>
+
+
+
+        <div data-edi="addPeo" class="innerEdi">
+            <label for="">name :</label>
+            <input type='text' class="name">
+            <br>
+            <label for="">username :</label>
+            <input type='text' class="usern">
+            <br>
+            <label for="">password :</label>
+            <input type='password' class="pass">
+            <br>
+            <label for="">Department :</label>
+            <input type='text' class="dept" readonly>
+            <br>
+            <label for="">role :</label>
+            <select type='text' class="role">
+            </select>
+            <br>
+            <button onclick="sendAdd()" class="submit left">Submit</button>
+            <button onclick='dom.edi.click()' class='cancel right'>Cancel</button>
+        </div>
+
+
+        <div id="load">loading...</div>
+    </div>
+
+    <script src="/js/people.js"></script>
+    <script src="/ag-grid/ag-grid-enterprise.min.js"></script>
+    <script src="/js/radar.js"></script>
+
+
+
+
+</body>
+
+</html>

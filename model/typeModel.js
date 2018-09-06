@@ -7,11 +7,16 @@ module.exports = {
 
 
 
-    find: (find, projection, limit, skip) => new Promise((resolve, reject) => {
-        global.db.collection("type").find(find).project(projection).toArray((err, list) => {
-            if (err) resolve(err);
-            // list may == []
-            else resolve(list)
+    findMany: info => new Promise((res, rej) => {
+        const options = {
+            skip: info.skip || 0,
+            limit: info.limit || undefined,
+            projection: info.proj || undefined,
+            sort: info.sort || undefined
+        }
+        global.db.collection("type").find(info.where, options).toArray((err, list) => {
+            if (err) rej(err);
+            else res(list)
         });
 
     }),
@@ -46,14 +51,17 @@ module.exports = {
         })
     }),
 
-    deleteOne: where => new Promise((resolve, reject) => {
-        db.collection('type').deleteOne(where, (err, log) => {
-            log.__proto__.toJSON = undefined
-            if (err) reject(err)
-            resolve(log)
+    findOneAndDelete: ({
+        where,
+        option = {}
+    }) => new Promise((res, rej) => {
+        db.collection('type').findOneAndDelete(where, option, (err, result) => {
+            if (err) rej(err)
+            else res({
+                oldOne: result.value
+            })
         })
-    })
-
+    }),
 
 
 

@@ -36,18 +36,19 @@ function middleware(req, res, next) {
     if (req.query.login) {
 
         const {
-            username,
-            cryptedPas
+            usern,
+            pass
         } = req.body.user
 
 
-        const resultPro = peopleModel.login({
+        peopleModel.login({
             // js的数据类型一定要和mongo中的一致
             // 用户名和密码统一用string吧, 省的以后麻烦
-            username: username.toLowerCase(),
-            cryptedPas
-        })
-        resultPro.then(user => {
+            usern: usern.toLowerCase(),
+            pass
+        }).then(({
+            user
+        }) => {
             if (!user) {
                 res.json({
                     msg: 'OOPS SORRY BUT COULDNT FIND MATCHED USER !!'
@@ -56,21 +57,12 @@ function middleware(req, res, next) {
             }
             // 登录成功
             req.session.user = user
-            console.log(new Date())
             console.log(user.name)
             console.log(req.ip)
-            // 此时内存中user的lastLogin是上一次的, 而接下来要改变的是DB中的
-            peopleModel.updateOne({
-                username
-            }, {
-                $set: {
-                    // mongo support native JS Date
-                    lastLogin: new Date()
-                }
-            })
-            // res.redirect('/view/index')
+            console.log(new Date().toDateString())
             res.json({
-                msg: 'ok'
+                msg: 'ok',
+                user
             })
         })
 

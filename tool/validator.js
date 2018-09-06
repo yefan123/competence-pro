@@ -21,7 +21,7 @@ function matchedRegexp(reg) {
 }
 
 
-function numberRange(min, max) {
+function numberRange(min = -Infinity, max = Infinity) {
     if (!(this instanceof Number)) throw 'ILLEGAL NUMBER'
     if (this < min) throw `ERROR BUT  ${this} SMALLER THAN ${min}`
     if (this > max) throw `ERROR BUT  ${this} GREATER THAN ${max}`

@@ -7,9 +7,12 @@
     <title>Home | CAS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/public.css">
+    <link rel="stylesheet" href="/css/public.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/css/index.css" />
-    <link rel="stylesheet" href="/fontawesome-free-5.1.0-web/css/all.css">
+    <link rel="stylesheet" href="/fontawesome/css/all.css">
+
+    <datalist id="deptList"></datalist>
+
 </head>
 
 
@@ -19,86 +22,48 @@
 
     <div id="main">
 
-        <div data-info="system_name">
-            <span class="fas fa-archway"></span>
-            <span>
-                Skill Grid System
-                <%- global.pkg.version %>
-            </span>
+        <div class="fas fa-archway">
+            <%- global.cfg.app.name %>
+            <%- global.cfg.app.version %>
         </div>
 
 
-        <div data-info="name">
-            <span class="fas fa-user-graduate"></span>
-            <span>Hello
-                <%- user.name %>
-            </span>
+        <div class="fas fa-user-graduate">
+            Hello
+            <%- user.name %>
         </div>
 
 
-        <div data-info="name">
-            <span class="fas fa-fingerprint"></span>
-            <span>
-                <%- user.username %>
-            </span>
+        <div class="fas fa-fingerprint">
+            <%- user.usern %>
         </div>
 
 
-        <div data-info="lastLogin">
-            <span class="far fa-clock"></span>
-            <span>
-                last login :
-                <%- user.lastLogin.toString() %>
-            </span>
+        <div id="last" class="far fa-clock">
+
         </div>
 
-        <div data-info="switchBranch">
-            <span class="fas fa-exchange-alt"></span>
-            <input list="branchDataList" id="branchSelector" onchange="switchBranch(this.value)">
+        <div class="fas fa-code-branch">
+            <%- user.dept %>
+        </div>
+        <div class="fas fa-exchange-alt none">
+            <input list="deptList" id="dept_sel" onchange="switchDept(this.value)">
         </div>
 
-        <div data-info="setting">
-            <span class="fas fa-cog"></span>
-            <button id="alterMyself" onclick="openEditor('updateUser')">setting</button>
-        </div>
-
-
-        <div data-info="level">
-            <span class="fas fa-id-card"></span>
-            <span>level:
-                <%- ({
+        <span class="fas fa-id-card">
+            level:
+            <%- ({
                     'staff':'common employee',
                     'leader':'branch leader',
                     'boss':'root'
                 })[user.level] %>
-            </span>
-
-        </div>
-
-
-        <div data-info="addLeader">
-            <span class="fas fa-user-plus"></span>
-            <span>
-                create new
-                <button onclick="openEditor('addLeader')"> leader </button>
-            </span>
-        </div>
-
-        <div data-info="role">
-            <span class="fas fa-tag"></span>
-            <span>role :
-                <%- user.role || "( leader )" %>
-            </span>
-        </div>
+        </span>
 
 
 
-
-
-
-        <div data-info="dropMyself">
-            <span class="fas fa-trash-alt"></span>
-            <button onclick="dropMyself()">delete account</button>
+        <div class="fas fa-tag">
+            role :
+            <%- user.role || "( leader )" %>
         </div>
 
 
@@ -109,99 +74,6 @@
 
 
 
-
-
-
-    <div id="editor" onclick='this.style.display="none"'>
-
-        <!-- 更新个人信息 -->
-        <div id="updateUserEditor" class="innerEditor">
-            <div>
-
-                <label for="">name :</label>
-                <input type='text' class="name">
-            </div>
-            <div>
-
-                <label for="">username :</label>
-                <input type='text' class="username" readonly>
-            </div>
-            <div>
-
-                <label for="">old password :</label>
-                <input type='text' class="old_pass">
-            </div>
-            <div>
-
-                <label for="">new password :</label>
-                <input type='text' class="new_pass">
-            </div>
-            <div>
-
-                <label for="">role :</label>
-                <select class="role"></select>
-            </div>
-            <span class="loading"></span>
-            <br>
-            <button onclick="sendUpdateUser()" class="submit left">Submit</button>
-            <button onclick='editor.click()' class='cancel right'>Cancel</button>
-        </div>
-
-        <!-- 添加leader -->
-        <div id="addLeaderEditor" class="innerEditor">
-
-            <label for="">name :</label>
-            <input type='text' class="name">
-
-            <br>
-            <label for="">username :</label>
-            <input type='text' class="username">
-
-            <br>
-            <label for="">password :</label>
-            <input type='password' class="password">
-
-            <br>
-            <label>reenter password :</label>
-            <input type='password' class="reenter_password">
-
-            <br>
-            <label for="">role :</label>
-            <input type='text' class="role" readonly value="leader">
-
-            <br>
-            <label for="">level :</label>
-            <input type='text' class="level" readonly value="leader">
-
-            <br>
-            <br>
-            <label for="">branch list :</label>
-            <button class="fas fa-plus" onclick="newInput()"></button>
-            <div class="branchList">
-                <input type="text" list="branchDataList">
-            </div>
-
-            <datalist id="branchDataList">
-            </datalist>
-
-            <br>
-            <span class="loading"></span>
-            <br>
-            <button onclick="sendAddLeader()" class="submit left">Submit</button>
-            <button onclick='editor.click()' class='cancel right'>Cancel</button>
-        </div>
-
-    </div>
-
-
-
-
-    <footer>
-
-
-    </footer>
-
-    <script src="/public.js"></script>
     <script src="/CryptoJS/rollups/sha1.js"></script>
     <script src="/js/index.js"></script>
 </body>
