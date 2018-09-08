@@ -64,20 +64,20 @@ module.exports = {
         })
     }),
 
-    // 删除文档
-    deleteOne: where => new Promise((resolve, reject) => {
-        db.collection('role').deleteOne(where, (err, log) => {
-            if (err) reject(err)
-            log.__proto__.toJSON = undefined
-            resolve(log)
-        })
-    }),
-
     distinct: key => new Promise((resolve, reject) => {
         db.collection('role').distinct(key).then(list => {
             resolve(list)
         })
+    }),
+
+    updateMany: info => new Promise((res, rej) => {
+        db.collection('role').updateMany(info.where, info.up, (err, log) => {
+            log.__proto__.toJSON = undefined
+            if (err) rej(err)
+            else res(log)
+        })
     })
+
 
 
 

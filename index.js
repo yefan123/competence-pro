@@ -18,19 +18,11 @@
     global.model = {
         peo: require('./model/peopleModel'),
         role: require('./model/roleModel'),
-        type: require('./model/typeModel')
+        skill: require('./model/skillModel')
     }
 
 
 
-
-
-    global.refreshDeptList = () => new Promise((resolve, reject) => {
-        model.role.distinct('dept').then(list => {
-            global.deptList = list
-            resolve()
-        })
-    })
 
 
     app.set('views', './view/')
@@ -48,7 +40,6 @@
         if (err) throw err;
         // 全局的连接池?
         global.db = client.db(cfg.mongo.db)
-        refreshDeptList()
     });
 
 

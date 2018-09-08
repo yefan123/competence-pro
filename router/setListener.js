@@ -12,19 +12,21 @@ const middleware = (req, res, next) => {
 
     const user = req.session.user
 
+    // rowList: pull->push
     if (req.query.setRow) {
 
 
         const {
+            skill_id,
             my_tar,
             real,
             act,
             act_sta,
             act_de,
             comm
-        } = req.body.row
+        } = req.body.newRow
 
-        let old = req.body.old
+        let oldRow = req.body.oldRow
 
         let {
             _id
@@ -55,7 +57,7 @@ const middleware = (req, res, next) => {
             },
             up: {
                 $pull: {
-                    skillList: old
+                    rowList: oldRow
                 }
             }
         })
@@ -66,7 +68,8 @@ const middleware = (req, res, next) => {
             },
             up: {
                 $push: {
-                    skillList: {
+                    rowList: {
+                        skill_id,
                         my_tar,
                         real,
                         act,
@@ -89,8 +92,12 @@ const middleware = (req, res, next) => {
             _id,
             name,
             usern,
-            pass
+            pass_old,
+            pass_new,
+            role_id
         } = req.body.peo
+        pass_old = sha1(pass_old)
+        pass_new = sha1(pass_new)
 
         try {
             validator.lengthRange.apply(name, [2, 40])
@@ -104,16 +111,18 @@ const middleware = (req, res, next) => {
 
         model.peo.findOneAndUpdate({
             where: {
-                _id
+                _id,
+                pass: pass_old
             },
-            update: {
+            up: {
                 $set: {
-                    name,
+                    name: name.toLowerCase(),
                     usern,
-                    pass
+                    pass: pass_new,
+                    role_id
                 }
             },
-            option: {
+            opt: {
                 returnOriginal: false
             }
         }).then(({
@@ -174,9 +183,51 @@ const middleware = (req, res, next) => {
                 msg: `oops nothing changed maybe people not existent`
             })
         })
-    } else if (req.query.setType) {
 
     } else if (req.query.setSkill) {
+        let {
+            _id,
+            name,
+            type,
+            desc,
+            attr
+        } = req.body.skill
+
+        try {
+            validator.lengthRange.apply(name, [2, 40])
+            validator.lengthRange.apply(desc, [0, 500])
+            validator.lengthRange.apply(type, [0, 40])
+            validator.matchedRegexp.apply(attr, [/^(common|specific)$/])
+        } catch (err) {
+            res.json({
+                msg: err
+            })
+            return
+        }
+
+        model.skill.findOneAndUpdate({
+            where: {
+                _id
+            },
+            up: {
+                $set: {
+                    name,
+                    desc,
+                    type,
+                    attr
+                }
+            },
+            opt:{
+                returnOriginal:false
+            }
+        }).then(({
+            skill
+        }) => {
+            res.json({
+                msg: 'ok',
+                skill
+            })
+        })
 
     } else if (req.query.setTarget) {
         let {

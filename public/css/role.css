@@ -9,7 +9,7 @@ aside#aside_left {
     top: 0;
 }
 
-#peoList {
+#roleList {
     padding: 20px 0;
     width: 100%;
     height: 100%;
@@ -21,7 +21,7 @@ aside#aside_left {
     overflow-x: visible;
 }
 
-#peoList button[data-peo_id] {
+#roleList button[data-role_id] {
     width: 100%;
     display: block;
     padding: 3px 0;
@@ -30,7 +30,7 @@ aside#aside_left {
     padding-left: 20px;
 }
 
-#peoList button[data-peo_id]:hover::before {
+#roleList button[data-role_id]:hover::before {
     /* long-arrow-alt-right */
     content: "\f30b\ ";
     color: blue;
@@ -38,17 +38,7 @@ aside#aside_left {
     white-space: nowrap;
 }
 
-#table {
-    position: fixed;
-    bottom: 0;
-    width: 68%;
-    left: 16%;
-    right: 1%;
-    background: white;
-    top: 0;
-    /* overflow: scroll; */
-    z-index: 5;
-}
+
 
 aside#curr {
     padding: 10px 15px;
@@ -96,6 +86,18 @@ select {
 #dot {
     float: right;
     font-size: 16px;
+}
+
+#table {
+    position: fixed;
+    bottom: 0;
+    width: 68%;
+    left: 16%;
+    right: 1%;
+    background: white;
+    top: 0;
+    /* overflow: scroll; */
+    z-index: 5;
 }
 
 /* radar relative */

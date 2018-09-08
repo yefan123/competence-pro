@@ -30,14 +30,6 @@ router.get('/index', checkLogin, (req, res, next) => {
 })
 
 
-router.get('/radar', checkLogin, (req, res, next) => {
-    res.render('radar.ejs', {
-        user: req.session.user
-
-    })
-})
-
-
 router.get('/outer', checkLogin, (req, res, next) => {
     res.render('outer.ejs', {
         user: req.session.user
@@ -60,14 +52,14 @@ router.get('/people', checkLogin, (req, res, next) => {
 })
 
 
-
-
-router.get('/target', checkLogin, (req, res, next) => {
-    res.render('target.ejs', {
+router.get('/role', checkLogin, (req, res, next) => {
+    res.render('role.ejs', {
         user: req.session.user
-
     })
 })
+
+
+
 
 
 

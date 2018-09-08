@@ -16,17 +16,16 @@
 
 <body>
 
+    <div class="none">
+        <div id="dot" class="fas fa-circle"></div>
+        <datalist id="typeList"></datalist>
+    </div>
 
 
 
     <!-- 左侧边栏 -->
-    <aside id="peoList" class="hidden">
-
-        <button class="fas fa-user-plus" onclick="openEdi('addPeo')"> Add</button>
-
-
-        <!-- by ajax -->
-
+    <aside id="aside_left">
+        <div id="peoList"></div>
     </aside>
 
 
@@ -41,31 +40,35 @@
         <div data-curr="role_name" class="fas fa-tag">
         </div>
 
-        <button id="radarToggler" class="fas fa-chart-pie" onclick="toggleRadar(6)"></button>
+        <button class="fas fa-chart-pie" onclick="drawSkillRadar(6)">radar on skill</button>
+        <button class="fas fa-chart-pie" onclick="drawTypeRadar(6)">radar on type</button>
 
+        <div id="skill"></div>
         <div id="skill_desc"></div>
 
-        <button id="setPeo" class="fas fa-cog" onclick="openEdi('setPeo')"> Set</button>
+        <button id="addPeo" class="fas fa-user-plus" onclick="openEdi('addPeo')">add people</button>
+        <button id="setPeo" class="fas fa-cog" onclick="openEdi('setPeo')">set people</button>
+
+        <button id="addSkill" class="fas fa-user-plus" onclick="openEdi('addSkill')">add skill</button>
+        <button id="setSkill" class="fas fa-cog" onclick="openEdi('setSkill')">set skill</button>
+
     </aside>
 
 
 
 
+    <!-- table -->
+    <div id="table" class=" ag-theme-material"></div>
 
-    <div id="table" class="main ag-theme-material">
-
-
-
-
-
-
-    </div>
+    <!-- radar -->
+    <div ondblclick="this.style.display='none'" id="radar"></div>
 
 
 
     <div id="edi" onclick='this.style.display="none"' class="none">
 
         <div data-edi="setRow" class="innerEdi">
+            <div class="edi_title">UPDATE</div>
             <div>
                 <label for="">Personal Target :</label>
                 <input type='number' min="0" max="5" step="1" class="my_tar">
@@ -107,6 +110,8 @@
 
 
         <div data-edi="addPeo" class="innerEdi">
+            <div class="edi_title">ADD PEOPLE</div>
+
             <label for="">name :</label>
             <input type='text' class="name">
             <br>
@@ -119,19 +124,115 @@
             <label for="">Department :</label>
             <input type='text' class="dept" readonly>
             <br>
-            <label for="">role :</label>
-            <select type='text' class="role">
+            <label>role :</label>
+            <select class="role_id">
             </select>
             <br>
-            <button onclick="sendAdd()" class="submit left">Submit</button>
+            <label for="">level :</label>
+            <select type='text' class="level">
+                <option value="staff">employee</option>
+                <option value="leader">manager</option>
+            </select>
+            <br>
+            <button onclick="sendAddPeo()" class="submit left">Submit</button>
             <button onclick='dom.edi.click()' class='cancel right'>Cancel</button>
         </div>
 
 
-        <div id="load">loading...</div>
+        <div data-edi="addSkill" class="innerEdi">
+            <div class="edi_title">ADD SKILL</div>
+
+            <div>
+                <label>name :</label>
+                <input type='text' class="name">
+            </div>
+            <div>
+                <label for="">type :</label>
+                <input type='text' class="type" list="typeList">
+            </div>
+            <div>
+                <label for="">attribute :</label>
+                <select class="attr">
+                    <option value="common">common</option>
+                    <option value="specific">specific</option>
+                </select>
+            </div>
+            <div>
+                <label for="">desc :</label>
+                <textarea type='text' class="desc"></textarea>
+            </div>
+            <br>
+            <button onclick="sendAddSkill()" class="submit left">Submit</button>
+        </div>
+
+
+        <div data-edi="setPeo" class="innerEdi">
+            <div class="edi_title">PEOPLE SETTING</div>
+
+            <div>
+                <label>name :</label>
+                <input type='text' class="name">
+            </div>
+            <div>
+                <label for="">username :</label>
+                <input type='text' class="usern" readonly>
+            </div>
+            <div>
+
+                <label for="">old password :</label>
+                <input type='password' class="pass_old">
+            </div>
+            <div>
+
+                <label for="">new password :</label>
+                <input type='password' class="pass_new">
+            </div>
+            <div>
+                <label for="">role :</label>
+                <select class="role_id"></select>
+            </div>
+            <br>
+            <button onclick="sendSetPeo()" class="submit left">Submit</button>
+            <button onclick='sendDropPeo()' class='drop right'>Delete</button>
+        </div>
+
+
+        <div data-edi="setSkill" class="innerEdi">
+            <div class="edi_title">SKILL SETTING</div>
+
+            <div>
+                <label>ID :</label>
+                <input type='text' class="_id" readonly>
+            </div>
+            <div>
+                <label>Name :</label>
+                <input type='text' class="name">
+            </div>
+            <div>
+                <label>Skill Type :</label>
+                <input type='text' class="type" list="typeList">
+            </div>
+            <div>
+                <label for="">attribute :</label>
+                <select class="attr">
+                    <option value="common">common</option>
+                    <option value="specific">specific</option>
+                </select>
+            </div>
+            <div>
+                <label>Description :</label>
+                <textarea type='text' class="desc"></textarea>
+            </div>
+            <button onclick="sendSetSkill()" class="submit left">Submit</button>
+            <button onclick='sendDropSkill()' class='drop right'>Delete</button>
+        </div>
+
+
+        <div id="loading">loading...</div>
     </div>
 
     <script src="/js/people.js"></script>
+    <script src="/js/editor.js"></script>
     <script src="/ag-grid/ag-grid-enterprise.min.js"></script>
     <script src="/js/radar.js"></script>
 

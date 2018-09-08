@@ -35,14 +35,15 @@
 
     let promiseList = []
 
-    // 公共
+    // 公共:skillList
     let p = window.sendFetch({
-        url: '/data?get=typeList'
+        url: '/data?get=skillList'
     })
     p.then(({
         list
     }) => {
-        window.typeList = list
+        window.skillList = list
+        getTypeList()
     })
     promiseList.push(p)
 
@@ -125,6 +126,13 @@
 
     Promise.all(promiseList).then(results => {
 
+        // 计算每个role的peoList并挂在对象之下
+        if (user.level !== 'staff') {
+            roleList.forEach(role => {
+                role.peoList = window.peoList.filter(peo => peo.role_id == role._id)
+            });
+        }
+
         window.pageList = Array.from(document.querySelectorAll('#menu button'))
 
         window.ready = true
@@ -145,7 +153,7 @@
 // 切换页面
 function switchInner(url, target, bannedLevels) {
     if (bannedLevels && bannedLevels.includes(user.level)) {
-        alert('sorry but only leader could access this tab :(')
+        alert('permission denied :(')
         return
     }
     if (ready) {
@@ -153,4 +161,13 @@ function switchInner(url, target, bannedLevels) {
         inner.location.href = url
         sessionStorage.setItem('cur_page', pageList.indexOf(target))
     }
+}
+
+
+function getTypeList() {
+    window.typeList = Array.from(new Set(skillList.map(s => s.type)))
+}
+
+function format(o) {
+    return Object.entries(o).map(en => (en[0] + ':').padEnd(8, ' ') + en[1]).join('\n')
 }

@@ -67,7 +67,7 @@ module.exports = {
         })
     }),
 
-    updateMany: (where, up) => new Promise((resolve, reject) => {
+    updateMany: ({where, up}) => new Promise((resolve, reject) => {
         db.collection('people').updateMany(where, up, (err, log) => {
             log.__proto__.toJSON = undefined
             if (err) reject(err)
@@ -78,11 +78,15 @@ module.exports = {
 
 
     // 增加新的员工记录
-    insertOne: people => new Promise((resolve, reject) => {
-        db.collection('people').insertOne(people, (err, log) => {
+    insertOne: ({
+        what
+    }) => new Promise((resolve, reject) => {
+        db.collection('people').insertOne(what, (err, log) => {
             log.__proto__.toJSON = undefined
             if (err) reject(err)
-            else resolve(log)
+            else resolve({
+                log
+            })
         })
     }),
 
@@ -95,19 +99,34 @@ module.exports = {
         })
     }),
 
-    deleteMany: where => new Promise((resolve, reject) => {
-        db.collection('people').deleteMany(where, (err, log) => {
-            log.__proto__.toJSON = undefined
-            if (err) reject(err)
-            else resolve(log)
-
-        })
-    }),
-
     distinct: key => new Promise((resolve, reject) => {
         db.collection('people').distinct(key).then(list => {
             resolve(list)
         })
-    })
+    }),
+
+    findOneAndUpdate: ({
+        where,
+        up,
+        opt
+    }) => new Promise((res, rej) => {
+        db.collection('people').findOneAndUpdate(where, up, opt, (err, result) => {
+            if (err) rej(err)
+            else res({
+                peo: result.value
+            })
+        })
+    }),
+
+    findOneAndDelete: ({
+        where
+    }) => new Promise((res, rej) => {
+        db.collection('people').findOneAndDelete(where, {}, (err, result) => {
+            if (err) rej(err)
+            else res({
+                peo: result.value
+            })
+        })
+    }),
 
 }

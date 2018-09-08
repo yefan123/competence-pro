@@ -5,9 +5,6 @@
 const express = require('express')
 const router = express.Router()
 const ObjectID = require('mongodb').ObjectID
-const peopleModel = require('../model/peopleModel')
-const roleModel = require('../model/roleModel')
-const typeModel = require('../model/typeModel')
 
 // // 因为post的body默认是没有格式的
 // const bodyParser = require("body-parser").urlencoded({
@@ -78,7 +75,7 @@ function middleware(req, res, next) {
             //     }
         case 'roleList':
             {
-                roleModel.findMany({
+                model.role.findMany({
                     where: {
                         dept: user.dept
                     }
@@ -95,7 +92,7 @@ function middleware(req, res, next) {
         case 'role':
             {
                 let role = req.body.role
-                roleModel.findOne({
+                model.role.findOne({
                     role
                 }).then(({
                     role
@@ -115,15 +112,16 @@ function middleware(req, res, next) {
             }
         case 'deptList':
             {
-                // 注意,是字符串不是对象
-                res.json({
-                    list: global.deptList
+                model.role.distinct('dept').then(list => {
+                    res.json({
+                        list
+                    })
                 })
                 break
             }
-        case 'typeList':
+        case 'skillList':
             {
-                model.type.findMany({
+                model.skill.findMany({
                     where: {}
                 }).then(list => {
                     res.json({

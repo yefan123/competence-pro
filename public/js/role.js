@@ -5,22 +5,25 @@
             return prop in obj ? obj[prop] : undefined;
         },
         set: (obj, prop, value) => {
-            // The default behavior to store the value
             obj[prop] = value;
 
             switch (prop) {
-                case 'peo':
-                    {
-                        dom.peo_name.innerHTML = value.name,
-                        dom.peo_usern.innerHTML = value.usern,
-                        Array.from(dom.peoList.children).find(b => b.getAttribute('data-peo_id') == curr.peo._id).appendChild(dom.dot)
-                        break
-                    }
+
                 case 'role':
                     {
                         dom.role_name.innerHTML = value.name
+                        dom.peo_count.innerHTML = value.peoList.length
+                        Array.from(dom.roleList.children).find(b => b.getAttribute('data-role_id') == curr.role._id).appendChild(dom.dot)
                         break
                     }
+                case 'skill':
+                    {
+                        dom.skill_name.innerHTML = value.name
+                        dom.skill_desc.innerHTML = value.desc
+                        dom.type.innerHTML = value.type
+                        break
+                    }
+                    // 没有type,因为type字段是虚的(寄托在skill上)
             }
         }
     })
@@ -30,16 +33,18 @@
     window.rowList = []
 
     window.dom = {
+        type:document.querySelector('[data-curr="type"]'),
+        peo_count: document.querySelector('[data-curr="peo_count"]'),
         radar: document.querySelector('#radar'),
         dot: document.querySelector('#dot'),
         loading: document.querySelector('#loading'),
         edi: document.querySelector('#edi'),
         curr: document.querySelector('#curr'),
-        peoList: document.querySelector('#peoList'),
+        roleList: document.querySelector('#roleList'),
         table: document.querySelector('#table'),
-        peo_name: document.querySelector('#curr [data-curr="peo_name"]'),
-        peo_usern: document.querySelector('#curr [data-curr="peo_usern"]'),
         role_name: document.querySelector('#curr [data-curr="role_name"]'),
+        skill_name: document.querySelector('#curr [data-curr="skill_name"]'),
+        skill_desc: document.querySelector('#curr [data-curr="skill_desc"]'),
         innerEdi: {}
     }
 
@@ -49,25 +54,17 @@
     switch (parent.user.level) {
         case 'staff':
             {
-                curr.p = parent.user
-                resetRowList()
-                gridOptions.api.setRowData(window.rowList);
-                dom.table.style.width = '80%'
-                radarFrame.setAttribute('width', '80%')
-
-                dom.table.style.left = '1%'
-                radarFrame.style.left = '1%'
-                document.querySelector('aside.hidden').classList.add('hidden')
+                // permission denied
                 break
             }
         case 'leader':
             {
-                loadPeoList(window.parent.peoList)
+                loadRoleList(window.parent.roleList)
                 break
             }
         case 'boss':
             {
-                loadPeoList(window.parent.peoList)
+                loadRoleList(window.parent.roleList)
                 break
             }
     }
@@ -78,13 +75,11 @@
 
 
 
-
-    dom.peoList.addEventListener('click', event => {
-        let p_id = event.target.getAttribute('data-peo_id')
-        if (p_id) {
-            let p = parent.peoList.find(p => p._id == p_id)
-            window.curr.peo = p;
-            window.curr.role = parent.roleList.find(r => r._id == p.role_id);
+    // switch role
+    dom.roleList.addEventListener('click', event => {
+        let _id = event.target.getAttribute('data-role_id')
+        if (_id) {
+            curr.role = parent.roleList.find(r => r._id == _id);
             resetRowList()
             gridOptions.api.setRowData(window.rowList);
             dom.table.focus()
@@ -94,13 +89,7 @@
 
 
 
-
-
-    dom.table.focus()
-
-
-
-
+    // 多个人的平均值
     window.columnDefs = [{
         headerName: 'Competence',
         field: 'skill',
@@ -113,29 +102,21 @@
         field: 'role_tar',
         enableValue: true,
         // group后自动aggregate
-        aggFunc:'avg'
+        aggFunc: 'avg',
+        editable: true,
+        onCellValueChanged: event => {
+            sendSetTar()
+        }
     }, {
-        headerName: 'My Target',
-        field: 'my_tar',
+        headerName: 'Personal Target Agg',
+        field: 'my_tar_agg',
         enableValue: true,
-        aggFunc:'avg'
+        aggFunc: 'avg'
     }, {
-        headerName: 'Actual Score',
-        field: 'real',
+        headerName: 'Actual Score Agg',
+        field: 'real_agg',
         enableValue: true,
-        aggFunc:'avg'
-    }, {
-        headerName: 'Action',
-        field: 'act',
-    }, {
-        headerName: 'Action Status',
-        field: 'act_sta',
-    }, {
-        headerName: 'Action Detail',
-        field: 'act_de',
-    }, {
-        headerName: 'Comment',
-        field: 'comm',
+        aggFunc: 'avg'
     }]
 
 
@@ -163,8 +144,6 @@
             curr.row = event.data
             curr.node = event.node
             curr.skill = parent.skillList.find(s => s._id == event.data.skill_id)
-            if (event.column.colId == 'skill') openEdi('setSkill')
-            else openEdi('setRow')
         },
     };
 
@@ -173,8 +152,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         new agGrid.Grid(dom.table, gridOptions);
 
-        // curr.peo = parent.peoList[0]
-        dom.peoList.children[0].click()
+        // curr.role = parent.roleList[0]
+        dom.roleList.children[0].click()
 
     });
 
@@ -196,15 +175,15 @@ function getContextMenuItems() {
 
 
 
-// refresh people list aside
-function loadPeoList(peoList = parent.peoList) {
-    dom.peoList.innerHTML = ''
-    for (let p of peoList) {
+// refresh roleple list aside
+function loadRoleList(roleList = parent.roleList) {
+    dom.roleList.innerHTML = ''
+    for (let r of roleList) {
         let button = document.createElement('button')
         button.classList.add('fas')
-        button.innerHTML = p.name
-        button.setAttribute('data-peo_id', p._id)
-        dom.peoList.appendChild(button)
+        button.innerHTML = r.name
+        button.setAttribute('data-role_id', r._id)
+        dom.roleList.appendChild(button)
     }
 
 
@@ -311,31 +290,45 @@ function drawTypeRadar(segment = 7) {
 
 
 
-function resetRowList(p = curr.peo) {
+// generate the rowList, and can be redraw
+function resetRowList() {
     window.rowList = []
     // let skillList = Array.prototype.concat.apply([], parent.typeList.map(t => t.skillList))
-    let r = parent.roleList.find(r => r._id == p.role_id)
 
     for (let s of parent.skillList) {
 
-        let row = resetRow(p.rowList.find(r => r.skill_id == s._id) || {
-            skill_id: s._id
-        })
-        rowList.push(row)
+        // 计算出基于skill和多个人的rowList,并过滤掉undefined的row
+        let rowList = curr.role.peoList.map(p => p.rowList).map(list => list.find(r => r.skill_id == s._id)).filter(r => r)
+
+        let row = {
+            skill_id: s._id,
+            my_tar_agg: getAvg(rowList.map(r => r.my_tar)),
+            real_agg: getAvg(rowList.map(r => r.real)),
+        }
+
+        window.rowList.push(resetRow(row))
     }
 }
+
+
+function getAvg(list) {
+    if (list.length == 0) return 0
+    let all = 0
+    list.map(x => {
+        all += x
+    })
+    return (all / list.length).toFixed(1)
+}
+
+
 
 
 // peo的row转ui的row
 function resetRow(r) {
     let {
         skill_id,
-        my_tar,
-        real,
-        act,
-        act_sta,
-        act_de,
-        comm
+        my_tar_agg,
+        real_agg,
     } = r
     let skill = parent.skillList.find(s => s._id == skill_id)
     let row = {
@@ -343,12 +336,8 @@ function resetRow(r) {
         skill_id,
         type: skill.type,
         role_tar: curr.role.tarList[skill_id],
-        my_tar,
-        real,
-        act,
-        act_sta,
-        act_de,
-        comm
+        my_tar_agg,
+        real_agg,
     }
     return row
 }

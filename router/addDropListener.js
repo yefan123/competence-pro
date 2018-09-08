@@ -12,9 +12,9 @@ const middleware = (req, res, next) => {
 
     const user = req.session.user
 
-   
-        // 添加people
-    if (req.query.addPeople) {
+
+    // 添加peo
+    if (req.query.addPeo) {
         if (user.level == 'staff') return
 
         let {
@@ -23,7 +23,7 @@ const middleware = (req, res, next) => {
             pass,
             role_id,
             level
-        } = req.body.people
+        } = req.body.peo
 
         try {
             validator.lengthRange.apply(name, [3, 40])
@@ -40,53 +40,53 @@ const middleware = (req, res, next) => {
 
         // 可以做一个role的存在性检测
 
-        peopleModel.insertOne({
-            new: {
+        model.peo.insertOne({
+            what: {
                 _id: new ObjectID().toString(),
                 name,
                 usern: usern.toLowerCase(),
-                pass_enc: sha1(pass),
+                pass: sha1(pass),
                 role_id,
                 level,
                 dept: user.dept,
                 last: new Date(),
-                skill_l: []
+                rowList: []
             }
         }).then(({
-            res
+            log
         }) => {
-            refreshBranchList()
             res.json({
                 msg: 'ok',
-                new: res.ops[0]
+                peo: log.ops[0]
             })
         })
 
 
-        // 删除people
-    } else if (req.query.dropPeople) {
+        // 删除peo
+    } else if (req.query.dropPeo) {
 
-        let p = req.body.people
-        let people = {
-            name: p.name,
-            username: p.username,
-            _id: p._id,
-            level: p.level
-        }
-        people._id = ObjectID(people._id)
-        // 同一时间只能操作同一个branch
-        people.branch = user.branch
+        let peo = req.body.peo
 
-        if (people.level == 'boss') {
+        // great operation
+        peo.dept = user.dept
+
+        if (peo.level == 'boss') {
             res.json({
                 msg: 'permission denied'
             })
             return
         }
-        peopleModel.deleteOne(people).then(log => {
+        model.peo.findOneAndDelete({
+            where: {
+                _id: peo._id,
+                dept: peo.dept
+            }
+        }).then(({
+            peo
+        }) => {
             res.json({
                 msg: 'ok',
-                log
+                peo
             })
         })
 
@@ -95,7 +95,12 @@ const middleware = (req, res, next) => {
         // add skill
     } else if (req.query.addSkill) {
 
-        let s = req.body.skill
+        let {
+            name,
+            type,
+            desc,
+            attr
+        } = req.body.skill
 
 
         if (req.session.user.level !== 'boss') {
@@ -104,8 +109,10 @@ const middleware = (req, res, next) => {
         }
 
         try {
-            // validator.matchedRegexp.apply(s.name, [/^[0-9a-zA-Z_@# \/]*$/g])
-            validator.lengthRange.apply(s.name, [3, 40])
+            validator.lengthRange.apply(name, [3, 40])
+            validator.lengthRange.apply(type, [3, 40])
+            validator.lengthRange.apply(desc, [0, 500])
+            validator.matchedRegexp.apply(attr, [/^(common|specific)$/])
         } catch (err) {
             res.json({
                 msg: err
@@ -113,41 +120,22 @@ const middleware = (req, res, next) => {
             return
         }
 
-        let p1 = skillModel.findOne({
-            name: s.name
-        })
-
-        let p2 = typeModel.findOne({
-            name: s.type
-        })
-
-
-        Promise.all([p1, p2]).then(results => {
-            if (results[0]) {
-                res.json({
-                    msg: `ERROR: COMPETENCE NAME '${s.name}' ALREADY EXISTS !
-                        TRY ANOTHER ONE PLS :)`
-                })
-                return
+        model.skill.insertOne({
+            skill: {
+                _id: new ObjectID().toString(),
+                name,
+                type,
+                desc,
+                attr
             }
-            if (!results[1]) {
-                res.json({
-                    msg: 'error: type unexisted !'
-                })
-                return
-            }
-
-            // skill的class为type的class(反范式?)
-            s.class = results[1].class
-
-            skillModel.insertOne(s).then(log => {
-                res.json({
-                    msg: 'ok',
-                    log
-                })
+        }).then(({
+            skill
+        }) => {
+            res.json({
+                msg: 'ok',
+                skill
             })
         })
-
 
 
 
@@ -157,25 +145,41 @@ const middleware = (req, res, next) => {
             return
         }
 
-        let s = req.body.skill
+        let {
+            _id
+        } = req.body.skill
 
 
-
-        let $unset = {}
-        $unset[`skill.${s.name}`] = ''
-
-        let p1 = peopleModel.updateMany({}, {
-            $unset
+        model.peo.updateMany({
+            where: {},
+            up: {
+                $pull: {
+                    rowList: {
+                        skill_id: _id
+                    }
+                }
+            }
         })
 
+        let $unset = {}
+        $unset[`tarList.${_id}`] = ''
+        model.role.updateMany({
+            where: {},
+            up: {
+                $unset
+            }
+        })
 
-
-        let p2 = skillModel.deleteOne(s)
-        Promise.all([p1, p2]).then(logList => {
+        model.skill.findOneAndDelete({
+            where: {
+                _id
+            },
+        }).then(({
+            skill
+        }) => {
             res.json({
                 msg: 'ok',
-                valueDropLog: logList[0],
-                skillDropLog: logList[1]
+                skill
             })
         })
 
@@ -240,8 +244,8 @@ const middleware = (req, res, next) => {
 
         let r = req.body.role
 
-        // 删除所有的属于role的people
-        let p1 = peopleModel.deleteMany({
+        // 删除所有的属于role的peo
+        let p1 = peoModel.deleteMany({
             role: r.name
         })
 
@@ -263,7 +267,7 @@ const middleware = (req, res, next) => {
 
             res.json({
                 msg: 'ok',
-                peopleDropLog: logList[0],
+                peoDropLog: logList[0],
                 aimDropLog: logList[1],
                 roleDropLog: logList[2]
             })
@@ -272,94 +276,6 @@ const middleware = (req, res, next) => {
 
 
 
-
-    } else if (req.query.addType) {
-        if (req.session.user.level !== 'boss') {
-            res.status(403).end()
-            return
-        }
-        let {
-            name,
-            attr
-        } = req.body.type
-
-        try {
-            validator.lengthRange.apply(name, [2, 40])
-            validator.matchedRegexp.apply(attr, [/^(common|specific)$/])
-        } catch (err) {
-            res.json({
-                msg: err
-            })
-            return
-        }
-
-        typeModel.insertOne({
-            newOne: t
-        }).then(({
-            res
-        }) => {
-            res.json({
-                msg: 'ok',
-                res: res.result
-            })
-        })
-
-
-
-
-    } else if (req.query.dropType) {
-        if (req.session.user.level !== 'boss') {
-            res.status(403).end()
-            return
-        }
-        let t = req.body.type;
-
-
-
-        typeModel.findOneAndDelete({
-            where: t
-        }, {}).then(({
-                oldOne
-            }) => {
-                let $in = oldOne.skillList.map(s => s._id)
-                let p0 = peopleModel.updateMany({
-                    where: {},
-                    update: {
-                        $pull: {
-                            skillList: {
-                                s_id: {
-                                    $in
-                                }
-                            }
-                        }
-                    }
-                })
-                let $unset = {}
-                oldOne.skillList.forEach(s => {
-                    $unset['target.' + s._id] = ''
-                });
-                let p1 = roleModel.updateMany({
-                    where: {},
-                    update: {
-                        $unset
-                    }
-                })
-
-                Promise.all([p0, p1]).then(([res1, res2]) => {
-
-                    res.json({
-                        msg: 'ok',
-                        oldOne,
-                        result: {
-                            updatePeople: req1.result,
-                            updateRole: req2.result
-                        }
-                    })
-                })
-
-            }
-
-        )
     }
 }
 

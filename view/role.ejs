@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>role</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/public.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/role.css" />
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+
+
+</head>
+
+
+<body>
+
+    <div class="none">
+        <div id="dot" class="fas fa-circle"></div>
+    </div>
+
+
+
+    <!-- 左侧边栏 -->
+    <aside id="aside_left">
+        <div id="roleList"></div>
+    </aside>
+
+
+
+    <!-- 右侧边栏 -->
+    <!-- proxy同步 -->
+    <aside id="curr">
+        <div data-curr="role_name" class="fas fa-tag"></div>
+        <div data-curr="skill_name" class="fas fa-tag"></div>
+        <div data-curr="type" class="fas fa-tag"></div>
+        <div data-curr="skill_desc" class="fas fa-tag"></div>
+        <div data-curr="peo_count" class="fas fa-tag"></div>
+
+        <button class="fas fa-chart-pie" onclick="drawSkillRadar(6)">radar on skill</button>
+        <button class="fas fa-chart-pie" onclick="drawTypeRadar(6)">radar on type</button>
+
+        <button id="addRole" class="fas fa-user-plus" onclick="openEdi('addRole')">add role</button>
+        <button id="setRole" class="fas fa-cog" onclick="openEdi('setRole')">set role</button>
+
+
+    </aside>
+
+
+
+
+    <!-- table -->
+    <div id="table" class="ag-theme-material"></div>
+
+    <!-- radar -->
+    <div ondblclick="this.style.display='none'" id="radar"></div>
+
+
+
+    <div id="edi" onclick='this.style.display="none"' class="none">
+
+
+
+
+
+        <div data-edi="addRole" class="innerEdi">
+            <div class="edi_title">ADD RolePLE</div>
+
+            <label for="">name :</label>
+            <input type='text' class="name">
+            <br>
+            <label for="">username :</label>
+            <input type='text' class="usern">
+            <br>
+            <label for="">password :</label>
+            <input type='password' class="pass">
+            <br>
+            <label for="">Department :</label>
+            <input type='text' class="dept" readonly>
+            <br>
+            <label>role :</label>
+            <select class="role_id">
+            </select>
+            <br>
+            <label for="">level :</label>
+            <select type='text' class="level">
+                <option value="staff">employee</option>
+                <option value="leader">manager</option>
+            </select>
+            <br>
+            <button onclick="sendAddRole()" class="submit left">Submit</button>
+            <button onclick='dom.edi.click()' class='cancel right'>Cancel</button>
+        </div>
+
+
+
+
+
+        <div data-edi="setRole" class="innerEdi">
+            <div class="edi_title">RolePLE SETTING</div>
+
+            <div>
+                <label>name :</label>
+                <input type='text' class="name">
+            </div>
+            <div>
+                <label for="">username :</label>
+                <input type='text' class="usern" readonly>
+            </div>
+            <div>
+
+                <label for="">old password :</label>
+                <input type='password' class="pass_old">
+            </div>
+            <div>
+
+                <label for="">new password :</label>
+                <input type='password' class="pass_new">
+            </div>
+            <div>
+                <label for="">role :</label>
+                <select class="role_id"></select>
+            </div>
+            <br>
+            <button onclick="sendSetRole()" class="submit left">Submit</button>
+            <button onclick='sendDropRole()' class='drop right'>Delete</button>
+        </div>
+
+
+
+
+
+        <div id="loading">loading...</div>
+    </div>
+
+    <script src="/js/role.js"></script>
+    <script src="/js/editor.js"></script>
+    <script src="/ag-grid/ag-grid-enterprise.min.js"></script>
+    <script src="/js/radar.js"></script>
+
+
+
+
+</body>
+
+</html>

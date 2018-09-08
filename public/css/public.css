@@ -102,7 +102,7 @@ select {
     color: rgba(0, 0, 0, 0.5);
 }
 
-#load {
+#loading {
     background: transparent;
     color: orange;
     cursor: wait;
@@ -149,11 +149,6 @@ select {
 
 .specific_class {
     color: red;
-}
-
-.active {
-    background: black;
-    color: white;
 }
 
 .innerEdi>div {
