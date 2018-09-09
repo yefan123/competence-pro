@@ -4,12 +4,12 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Home | CAS</title>
+    <title>Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/public.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/css/index.css" />
-    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
 
 
 </head>
@@ -49,18 +49,18 @@
         <div class="fas fa-code-branch">
             <%- user.dept %>
         </div>
-        <div class="fas fa-exchange-alt none">
-            <input list="deptList" id="dept_sel" onchange="switchDept(this.value)">
+        <div class="fas fa-exchange-alt" style="display:none">
+            <input list="deptList" id="dept_sel" onchange="toDept(this.value)">
         </div>
 
-        <span class="fas fa-id-card">
+        <div class="fas fa-id-card">
             level:
             <%- ({
                     'staff':'common employee',
                     'leader':'branch leader',
                     'boss':'root'
                 })[user.level] %>
-        </span>
+        </div>
 
 
 

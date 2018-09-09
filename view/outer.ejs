@@ -11,12 +11,16 @@
     <link rel="icon" href="/img/favicon.png" type="image/png" sizes="48x48">
     <link rel="stylesheet" type="text/css" media="screen" href="/css/public.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/outer.css" />
-    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
 
 </head>
 
 <body>
 
+    <div class="none">
+        <div id="arrow" class="fas fa-sort-down"></div>
+    </div>
+    
 
     <header>
 
@@ -24,8 +28,8 @@
 
         <div id="menu">
             <button class="fas fa-home" id="indexBtn" onclick="switchInner('/view/index',this)">Home</button>
-            <button class="fas fa-pen-square" id="people_skill_btn" onclick="switchInner('/view/people',this)">People</button>
-            <button class="fab fa-linode" id="people_type_btn" onclick="switchInner('/view/role',this,['staff'])">Role</button>
+            <button class="fas fa-user" id="people_skill_btn" onclick="switchInner('/view/people',this)">People</button>
+            <button class="fas fa-tag" id="people_type_btn" onclick="switchInner('/view/role',this,['staff'])">Role</button>
         </div>
 
 

@@ -20,7 +20,7 @@ const ObjectID = require('mongodb').ObjectID
 
 // 这里的'/'是根据是上一层的路径
 // 比如上一次是'/test',这里也是'/test',最终匹配的就是/test/test
-router.all('/', checkLogin, middleware)
+router.all('/', checkLogin, bodyJsonParser, middleware)
 
 
 
@@ -40,11 +40,11 @@ function middleware(req, res, next) {
         case 'peoList':
             {
                 // 没有peopleListBrief,因为已经部门过滤
-                if (user.level == 'staff') return
+                // if (user.level == 'staff') return
+                let where = req.body.peo || {}
+                where.dept = user.dept
                 model.peo.findMany({
-                    where: {
-                        dept: user.dept
-                    },
+                    where,
                     projection: {
                         _id: 1,
                         name: 1,
@@ -75,10 +75,10 @@ function middleware(req, res, next) {
             //     }
         case 'roleList':
             {
+                let where = req.body.role || {}
+                where.dept = user.dept
                 model.role.findMany({
-                    where: {
-                        dept: user.dept
-                    }
+                    where
                 }).then(({
                     list
                 }) => {
@@ -89,27 +89,26 @@ function middleware(req, res, next) {
                 })
                 break
             }
-        case 'role':
-            {
-                let role = req.body.role
-                model.role.findOne({
-                    role
-                }).then(({
-                    role
-                }) => {
-                    if (role) {
-                        res.json({
-                            msg: 'ok',
-                            role
-                        })
-                    } else {
-                        res.json({
-                            msg: 'not found'
-                        })
-                    }
-                })
-                break
-            }
+            // case 'role':
+            //     {
+            //         model.role.findOne({
+            //             where: req.body.role
+            //         }).then(({
+            //             role
+            //         }) => {
+            //             if (role) {
+            //                 res.json({
+            //                     msg: 'ok',
+            //                     role
+            //                 })
+            //             } else {
+            //                 res.json({
+            //                     msg: 'not found'
+            //                 })
+            //             }
+            //         })
+            //         break
+            //     }
         case 'deptList':
             {
                 model.role.distinct('dept').then(list => {

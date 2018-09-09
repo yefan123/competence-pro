@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/public.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/css/people.css" />
-    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css">
 
 
 </head>
@@ -33,18 +33,16 @@
     <!-- 右侧边栏 -->
     <!-- proxy同步 -->
     <aside id="curr">
-        <div data-curr="peo_name" class="fas fa-user">
-        </div>
-        <div data-curr="peo_usern" class="fas fa-fingerprint">
-        </div>
-        <div data-curr="role_name" class="fas fa-tag">
-        </div>
+        <div data-curr="peo_name" class="fas fa-user"></div>
+        <div data-curr="peo_usern" class="fas fa-fingerprint"></div>
+        <div data-curr="role_name" class="fas fa-tag"></div>
+        <div data-curr="skill_name" class="fas fa-star"></div>
+        <div data-curr="skill_desc" class="fas fa-star"></div>
+        <div data-curr="type" class="fas fa-star"></div>
 
+        
         <button class="fas fa-chart-pie" onclick="drawSkillRadar(6)">radar on skill</button>
         <button class="fas fa-chart-pie" onclick="drawTypeRadar(6)">radar on type</button>
-
-        <div id="skill"></div>
-        <div id="skill_desc"></div>
 
         <button id="addPeo" class="fas fa-user-plus" onclick="openEdi('addPeo')">add people</button>
         <button id="setPeo" class="fas fa-cog" onclick="openEdi('setPeo')">set people</button>
@@ -104,7 +102,6 @@
                 <textarea type="text" class="comm"></textarea>
             </div>
             <button onclick='sendSetRow()' class='submit left'>Submit</button>
-            <button onclick='dom.edi.click()' class='cancel right'>Cancel</button>
         </div>
 
 
@@ -135,7 +132,6 @@
             </select>
             <br>
             <button onclick="sendAddPeo()" class="submit left">Submit</button>
-            <button onclick='dom.edi.click()' class='cancel right'>Cancel</button>
         </div>
 
 

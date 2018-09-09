@@ -1,4 +1,17 @@
 (function init() {
+
+    // borwser detection
+    let {
+        name,
+        version,
+        os,
+        mobile
+    } = browserDetect()
+    if (!['chrome', 'firefox'].includes(name)) {
+        document.body.innerHTML = `<h1>Oops Seems ur Using ${name.toUpperCase()} ${version}</h1>
+            <br><h2>Get a Chrome r Firefox Plz :-)</h2>`
+    }
+
     window.sendFetch = ({
         url,
         body
@@ -13,8 +26,8 @@
     }).then(res => res.json())
 
     window.dom = {
-        pass: document.querySelector('#password'),
-        usern: document.querySelector('#username'),
+        pass: document.querySelector('#pass'),
+        usern: document.querySelector('#usern'),
         error: document.querySelector('#error')
     }
 

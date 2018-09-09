@@ -90,15 +90,6 @@ module.exports = {
         })
     }),
 
-    // 删除文档
-    deleteOne: where => new Promise((resolve, reject) => {
-        db.collection('people').deleteOne(where, (err, log) => {
-            log.__proto__.toJSON = undefined
-            if (err) reject(err)
-            else resolve(log)
-        })
-    }),
-
     distinct: key => new Promise((resolve, reject) => {
         db.collection('people').distinct(key).then(list => {
             resolve(list)

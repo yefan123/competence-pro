@@ -194,14 +194,13 @@ const middleware = (req, res, next) => {
             return
         }
 
-        let r = req.body.role
-
+        let {
+            name
+        } = req.body.role
 
 
         try {
-            // '-'是正则特殊字符
-            // validator.matchedRegexp.apply(r.name, [/^[0-9a-zA-Z_\- ]*$/g])
-            validator.lengthRange.apply(r.name, [3, 40])
+            validator.lengthRange.apply(name, [3, 40])
         } catch (err) {
             res.json({
                 msg: err
@@ -210,26 +209,19 @@ const middleware = (req, res, next) => {
         }
 
 
-        roleModel.findOne({
-            name: r.name
-        }).then(role => {
-            if (role) {
-                res.json({
-                    msg: `ERROR: ROLE NAME '${r.name}' ALREADY EXISTS !
-                        TRY ANOTHER ONE PLS :)`
-                })
-                return
+        model.role.insertOne({
+            role: {
+                _id: new ObjectID().toString(),
+                name,
+                dept: user.dept,
+                tarList: {}
             }
-            let newRole = {
-                name: r.name,
-                branch: req.session.user.branch
-            }
-            roleModel.insertOne(newRole).then(log => {
-                refreshBranchList()
-                res.json({
-                    msg: 'ok',
-                    log
-                })
+        }).then(({
+            role
+        }) => {
+            res.json({
+                msg: 'ok',
+                role
             })
         })
 
@@ -242,39 +234,28 @@ const middleware = (req, res, next) => {
             return
         }
 
-        let r = req.body.role
+        let {
+            _id
+        } = req.body.role
 
-        // 删除所有的属于role的peo
-        let p1 = peoModel.deleteMany({
-            role: r.name
-        })
+        // // 删除所有的属于role的peo
+        // let p1 = peoModel.deleteMany({
+        //     role: r.name
+        // })
 
-        // 删除所有的target
-        let $unset = {}
-        $unset[`target.${r.name}`] = ''
-        let p2 = skillModel.updateMany({}, {
-            $unset
-        })
-
-        let p3 = roleModel.deleteOne({
-            name: r.name,
-            branch: req.session.user.branch
-
-        })
-
-        Promise.all([p1, p2, p3]).then(logList => {
-
-
+        model.role.findOneAndDelete({
+            where: {
+                _id,
+                dept: user.dept
+            }
+        }).then(({
+            role
+        }) => {
             res.json({
                 msg: 'ok',
-                peoDropLog: logList[0],
-                aimDropLog: logList[1],
-                roleDropLog: logList[2]
+                role
             })
         })
-
-
-
 
     }
 }

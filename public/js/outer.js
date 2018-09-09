@@ -3,7 +3,7 @@
     window.user = JSON.parse(localStorage.getItem('user'))
     window.user.last = new Date(user.last)
 
-
+    // 全局fetch封装
     window.sendFetch = ({
         url,
         body
@@ -22,10 +22,8 @@
 
 
     window.dom = {
-        arrow: document.createElement('div')
+        arrow: document.querySelector('#arrow')
     }
-    dom.arrow.classList.add('fas')
-    dom.arrow.classList.add('fa-sort-down')
 
     // data ready 
     window.ready = false
@@ -48,28 +46,42 @@
     promiseList.push(p)
 
 
+
     if (user.level === 'staff') {
-        let p = fetch('/data?get=role', {
-            body: JSON.stringify({
+        let p0 = sendFetch({
+            url: '/data?get=peoList',
+            body: {
+                peo: {
+                    _id: user._id
+                }
+            }
+        })
+        p0.then(({
+            msg,
+            list
+        }) => {
+            window.peoList = list
+        })
+        let p1 = sendFetch({
+            url: '/data?get=roleList',
+            body: {
                 role: {
                     _id: user.r_id
                 }
-            }),
-            headers: {
-                'content-type': 'application/json'
-            },
-            method: 'POST',
-            credentials: 'include'
-        }).then(res => res.json())
-        promiseList.push(p)
-        p.then(({
-            msg,
-            role
-        }) => {
-            if (msg == 'ok') {
-                window.role = role
             }
         })
+        p1.then(({
+            msg,
+            list
+        }) => {
+            if (msg == 'ok') {
+                window.roleList = list
+            }
+        })
+        promiseList.push(p0)
+        promiseList.push(p1)
+
+
 
     } else if (user.level === 'leader') {
         let p0 = sendFetch({
@@ -90,6 +102,9 @@
         })
         promiseList.push(p0)
         promiseList.push(p1)
+
+
+
     } else if (user.level === 'boss') {
         let p0 = sendFetch({
             url: '/data?get=peoList'
@@ -127,11 +142,9 @@
     Promise.all(promiseList).then(results => {
 
         // 计算每个role的peoList并挂在对象之下
-        if (user.level !== 'staff') {
-            roleList.forEach(role => {
-                role.peoList = window.peoList.filter(peo => peo.role_id == role._id)
-            });
-        }
+        roleList.forEach(role => {
+            role.peoList = window.peoList.filter(peo => peo.role_id == role._id)
+        });
 
         window.pageList = Array.from(document.querySelectorAll('#menu button'))
 

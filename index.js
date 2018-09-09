@@ -6,6 +6,8 @@
 
     global.session = require('express-session');
     global.mongoStore = require('connect-mongo')(session)
+    
+    global.bodyJsonParser = require("body-parser").json()
 
 
     global.cfg = require('./config.js')

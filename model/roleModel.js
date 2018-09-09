@@ -36,19 +36,36 @@ module.exports = {
     }),
 
 
-    findOne: (where, projection, limit, skip) => new Promise((resolve, reject) => {
-        db.collection('role').findOne(where, (err, result) => {
+    findOne: ({
+        where,
+        proj,
+        limit,
+        skip
+    }) => new Promise((resolve, reject) => {
+        db.collection('role').findOne(where, {
+            projection: proj,
+            limit,
+            skip
+        }, (err, role) => {
             if (err) throw err;
-            resolve(result)
+            resolve({
+                role
+            })
         })
     }),
 
 
 
-    updateOne: (where, update) => new Promise((resolve, reject) => {
-        db.collection('role').updateOne(where, update, (err, result) => {
+    findOneAndUpdate: ({
+        where,
+        up,
+        opt = {}
+    }) => new Promise((resolve, reject) => {
+        db.collection('role').findOneAndUpdate(where, up, opt, (err, result) => {
             if (err) reject(err);
-            resolve(result)
+            resolve({
+                role: result.value
+            })
         })
     }),
 
@@ -56,11 +73,15 @@ module.exports = {
 
 
     // 增加新的role
-    insertOne: role => new Promise((resolve, reject) => {
+    insertOne: ({
+        role
+    }) => new Promise((resolve, reject) => {
         db.collection('role').insertOne(role, (err, log) => {
             log.__proto__.toJSON = undefined
             if (err) reject(err)
-            else resolve(log)
+            else resolve({
+                role: log.ops[0]
+            })
         })
     }),
 
@@ -76,7 +97,20 @@ module.exports = {
             if (err) rej(err)
             else res(log)
         })
-    })
+    }),
+
+
+    findOneAndDelete: ({
+        where,
+        opt = {}
+    }) => new Promise((res, rej) => {
+        db.collection('role').findOneAndDelete(where, opt, (err, result) => {
+            if (err) rej(err)
+            else res({
+                role: result.value
+            })
+        })
+    }),
 
 
 

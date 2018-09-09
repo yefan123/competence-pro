@@ -22,6 +22,8 @@
             }
         case 'boss':
             {
+                dom.dept_sel.parentNode.style.display='block'
+                
                 parent.sendFetch({
                     url: '/data?get=deptList'
                 }).then(({
@@ -39,12 +41,12 @@
     document.querySelector('#main #last').innerHTML = 'last login: ' + parent.user.last.toDateString()
 
 
-
-
 })();
 
 
 // boss切换部门
-function switchDept(dept) {
-    parent.location.href = '/log?switchDept=' + dept
+function toDept(dept) {
+    parent.user.dept = dept
+    localStorage.setItem('user', JSON.stringify(parent.user))
+    parent.location.href = '/log?toDept=' + dept
 }

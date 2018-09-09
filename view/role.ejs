@@ -33,10 +33,10 @@
     <!-- proxy同步 -->
     <aside id="curr">
         <div data-curr="role_name" class="fas fa-tag"></div>
-        <div data-curr="skill_name" class="fas fa-tag"></div>
-        <div data-curr="type" class="fas fa-tag"></div>
-        <div data-curr="skill_desc" class="fas fa-tag"></div>
-        <div data-curr="peo_count" class="fas fa-tag"></div>
+        <div data-curr="peo_count" class="fas fa-users"></div>
+        <div data-curr="skill_name" class="fas fa-star"></div>
+        <div data-curr="skill_desc" class="fas fa-star"></div>
+        <div data-curr="type" class="fas fa-star"></div>
 
         <button class="fas fa-chart-pie" onclick="drawSkillRadar(6)">radar on skill</button>
         <button class="fas fa-chart-pie" onclick="drawTypeRadar(6)">radar on type</button>
@@ -65,32 +65,15 @@
 
 
         <div data-edi="addRole" class="innerEdi">
-            <div class="edi_title">ADD RolePLE</div>
+            <div class="edi_title">ADD ROLE</div>
 
-            <label for="">name :</label>
-            <input type='text' class="name">
-            <br>
-            <label for="">username :</label>
-            <input type='text' class="usern">
-            <br>
-            <label for="">password :</label>
-            <input type='password' class="pass">
-            <br>
             <label for="">Department :</label>
             <input type='text' class="dept" readonly>
             <br>
-            <label>role :</label>
-            <select class="role_id">
-            </select>
-            <br>
-            <label for="">level :</label>
-            <select type='text' class="level">
-                <option value="staff">employee</option>
-                <option value="leader">manager</option>
-            </select>
+            <label for="">name :</label>
+            <input type='text' class="name">
             <br>
             <button onclick="sendAddRole()" class="submit left">Submit</button>
-            <button onclick='dom.edi.click()' class='cancel right'>Cancel</button>
         </div>
 
 
@@ -98,33 +81,31 @@
 
 
         <div data-edi="setRole" class="innerEdi">
-            <div class="edi_title">RolePLE SETTING</div>
+            <div class="edi_title">ROLE SETTING</div>
 
+            <div>
+                <label>ID :</label>
+                <input type="text" class="_id" readonly>
+            </div>
+            <div>
+                <label>Department :</label>
+                <input type="text" class="dept" readonly>
+            </div>
+            <div>
+                <label>Target Count :</label>
+                <input type="text" class="tar_count" readonly>
+            </div>
+            <div>
+                <label>People Count :</label>
+                <input type="text" class="peo_count" readonly>
+            </div>
             <div>
                 <label>name :</label>
                 <input type='text' class="name">
             </div>
-            <div>
-                <label for="">username :</label>
-                <input type='text' class="usern" readonly>
-            </div>
-            <div>
-
-                <label for="">old password :</label>
-                <input type='password' class="pass_old">
-            </div>
-            <div>
-
-                <label for="">new password :</label>
-                <input type='password' class="pass_new">
-            </div>
-            <div>
-                <label for="">role :</label>
-                <select class="role_id"></select>
-            </div>
             <br>
-            <button onclick="sendSetRole()" class="submit left">Submit</button>
-            <button onclick='sendDropRole()' class='drop right'>Delete</button>
+            <button onclick="sendSetRole()" class=" left">Submit</button>
+            <button onclick='sendDropRole()' class=' right'>Delete</button>
         </div>
 
 

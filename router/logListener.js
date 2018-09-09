@@ -57,9 +57,7 @@ function middleware(req, res, next) {
             }
             // 登录成功
             req.session.user = user
-            console.log(user.name)
-            console.log(req.ip)
-            console.log(new Date().toDateString())
+            console.log(user.name, req.ip, new Date().toDateString())
             res.json({
                 msg: 'ok',
                 user
@@ -78,44 +76,26 @@ function middleware(req, res, next) {
 
 
         // 切换部门
-    } else if (req.query.switchBranch) {
-        if (req.session.user.level == 'staff') {
+    } else if (req.query.toDept) {
+        if (req.session.user.level !== 'boss') {
             res.status(403).end()
             return
         }
-        if (user.level == 'leader' && !user.branchList.includes(req.query.switchBranch)) {
-            res.status(403).end()
-        }
-        peopleModel.updateOne({
-            username: user.username,
-            branch: user.branch
-        }, {
-            $set: {
-                branch: req.query.switchBranch
+        let dept = req.query.toDept
+        model.peo.findOneAndUpdate({
+            where: {
+                _id: user._id,
+                level: 'boss'
+            },
+            up: {
+                $set: {
+                    dept
+                }
             }
         })
-        req.session.user.branch = req.query.switchBranch
+        user.dept = dept
         res.redirect('/')
 
-
-
-        // 切换用户
-    } else if (req.query.switchUser) {
-        if (req.session.user.level == 'staff') {
-            res.status(403).end()
-            return
-        }
-        let newUser = req.body.user
-        peopleModel.login({
-            username: newUser.username
-        }).then(user => {
-            if (user) {
-                req.session.user = user
-                res.json({
-                    msg: 'ok'
-                })
-            }
-        })
     }
 
 }

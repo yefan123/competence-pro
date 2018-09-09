@@ -8,8 +8,8 @@
         })
     })
 
-    dom.edi.addEventListener('keydown', e => {
-        if (e.key === 'Escape') edi.click()
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') dom.edi.click()
     })
 
 })();
@@ -17,8 +17,8 @@
 
 
 
-function openEdi(mode) {
-    edi.style.display = 'flex'
+function openEdi(mode, focus) {
+    dom.edi.style.display = 'flex'
     Object.values(dom.innerEdi).forEach(edi => {
         edi.style.display = 'none'
     })
@@ -34,9 +34,14 @@ function openEdi(mode) {
         edi.querySelector('.act_sta').value = curr.row.act_sta
         edi.querySelector('.act_de').value = curr.row.act_de
         edi.querySelector('.comm').value = curr.row.comm
-
+        edi.querySelector('.' + focus).focus()
 
     } else if (mode === 'addPeo') {
+        if (parent.user.level=='staff') {
+            alert('permission denied')
+            dom.edi.click()
+            return
+        }
         let edi = dom.innerEdi.addPeo
         window.curr.edi = edi
         edi.querySelector('select.role_id').innerHTML = parent.roleList.map(r => `<option value="${r._id}">${r.name}</option>`)
@@ -54,7 +59,24 @@ function openEdi(mode) {
         edi.querySelector('.usern').value = curr.peo.usern
         edi.querySelector('.role_id').value = curr.role._id
 
+    } else if (mode === 'addSkill') {
+        if (parent.user.level=='staff') {
+            alert('permission denied')
+            dom.edi.click()
+            return
+        }
+        let edi = dom.innerEdi.addSkill
+        window.curr.edi = edi
+        document.querySelector('datalist#typeList').innerHTML = parent.typeList.map(t => `<option value="${t}">`).join('')
+        edi.style.display = 'block'
+        edi.querySelector('.name').focus()
+
     } else if (mode === 'setSkill') {
+        if (parent.user.level=='staff') {
+            alert('permission denied')
+            dom.edi.click()
+            return
+        }
         let edi = dom.innerEdi.setSkill
         window.curr.edi = edi
         document.querySelector('datalist#typeList').innerHTML = parent.typeList.map(t => `<option value="${t}">`).join('')
@@ -65,12 +87,27 @@ function openEdi(mode) {
         edi.querySelector('.type').value = curr.skill.type
         edi.querySelector('.attr').value = curr.skill.attr
 
-    } else if (mode === 'addSkill') {
-        let edi = dom.innerEdi.addSkill
+    } else if (mode === 'addRole') {
+        let edi = dom.innerEdi.addRole
         window.curr.edi = edi
-        document.querySelector('datalist#typeList').innerHTML = parent.typeList.map(t => `<option value="${t}">`).join('')
         edi.style.display = 'block'
+        edi.querySelector('.dept').value = parent.user.dept
         edi.querySelector('.name').focus()
+
+    } else if (mode === 'setRole') {
+        if (!curr.role) {
+            alert('no role chosen')
+            dom.edi.click()
+            return
+        }
+        let edi = dom.innerEdi.setRole
+        window.curr.edi = edi
+        edi.style.display = 'block'
+        edi.querySelector('._id').value = curr.role._id
+        edi.querySelector('.name').value = curr.role.name
+        edi.querySelector('.dept').value = parent.user.dept
+        edi.querySelector('.tar_count').value = Object.keys(curr.role.tarList).length
+        edi.querySelector('.peo_count').value = curr.role.peoList.length
     }
 }
 
@@ -108,15 +145,14 @@ function sendSetRow() {
         msg
     }) => {
         if (msg == 'ok') {
-            dom.edi.click()
             if (oldRow)
                 curr.peo.rowList[curr.peo.rowList.indexOf(oldRow)] = newRow
             else curr.peo.rowList.push(newRow)
             curr.node.setData(resetRow(newRow))
         } else {
             alert(msg)
-            dom.edi.click()
         }
+        dom.edi.click()
     })
 
 }
@@ -276,7 +312,7 @@ function sendAddSkill() {
 
 function sendSetSkill() {
     let skill = {
-        _id: curr.edi.querySelector('._id').value,
+        _id: curr.skill._id,
         name: curr.edi.querySelector('.name').value,
         type: curr.edi.querySelector('.type').value,
         desc: curr.edi.querySelector('.desc').value,
@@ -299,5 +335,104 @@ function sendSetSkill() {
             alert(msg)
         }
         dom.edi.click()
+    })
+}
+
+
+
+function sendAddRole() {
+    let role = {
+        name: curr.edi.querySelector('.name').value
+    }
+    parent.sendFetch({
+        url: '/addDrop?addRole=1',
+        body: {
+            role
+        }
+    }).then(({
+        msg,
+        role
+    }) => {
+        if (msg === 'ok') {
+            alert(`ROLE ADDED :\n${parent.format(role)}`)
+            role.peoList = []
+            parent.roleList.push(role)
+            loadRoleList()
+        } else {
+            alert(msg)
+        }
+        dom.edi.click()
+    })
+}
+
+function sendSetRole() {
+    let role = {
+        _id: curr.role._id,
+        name: curr.edi.querySelector('.name').value
+    }
+
+    parent.sendFetch({
+        url: '/set?setRole=1',
+        body: {
+            role
+        }
+    }).then(({
+        msg,
+        role
+    }) => {
+        if (msg == 'ok') {
+            alert(`ROLE UPDATED:\n${parent.format(role)}`)
+            Object.assign(curr.role, role)
+        } else {
+            alert(msg)
+        }
+        dom.edi.click()
+    })
+}
+
+function sendDropRole() {
+    if (parent.user.level == 'staff') {
+        alert('permission denied')
+        return
+    }
+    if (!confirm(`R U SURE 2 DROP THE ROLE ALONG WITH ALL TARGET DATA
+        U SHALL UPDATE THE PEOPLE AFTERWARDS`)) return
+
+    parent.sendFetch({
+        url: '/addDrop?dropRole=1',
+        body: {
+            role: curr.role
+        }
+    }).then(({
+        msg,
+        role
+    }) => {
+        if (msg === 'ok') {
+            alert(`ROLE DROPED FOREVER:\n${parent.format(role)}`)
+            parent.roleList = parent.roleList.filter(r => r !== curr.role)
+            location.reload()
+        } else {
+            alert(msg)
+        }
+        dom.edi.click()
+    })
+}
+
+function sendSetTar(param) {
+    parent.sendFetch({
+        url: '/set?setTar=1',
+        body: {
+            param
+        }
+    }).then(({
+        msg
+    }) => {
+        if (msg == 'ok') {
+            // 考虑用颜色区分是否修改成功
+            alert('ok, new value: ' + param.value)
+            curr.role.tarList[param.skill_id] = param.value
+        } else {
+            alert(msg)
+        }
     })
 }

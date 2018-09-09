@@ -5,8 +5,8 @@ module.exports = {
     session: {
         secret: "123",
         key: "competence",
-        // 2 day
-        maxAge: 2 * (24 * 3600) * 1000
+        // 7 day
+        maxAge: 7 * (24 * 3600) * 1000
     },
     mongo: {
         url: "mongodb://localhost:27017/competence",
@@ -15,6 +15,6 @@ module.exports = {
     },
     app: {
         name: 'skill pro',
-        version: '3.0.0'
+        version: '3.0.2'
     }
 }

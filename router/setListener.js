@@ -43,7 +43,7 @@ const middleware = (req, res, next) => {
             validator.lengthRange.apply(act, [0, 100])
             validator.lengthRange.apply(act_sta, [0, 100])
             validator.lengthRange.apply(act_de, [0, 100])
-            validator.lengthRange.apply(comm, [0, 100])
+            validator.lengthRange.apply(comm, [0, 500])
         } catch (err) {
             res.json({
                 msg: err
@@ -146,12 +146,10 @@ const middleware = (req, res, next) => {
         let {
             _id,
             name,
-            dept
         } = req.body.role
 
         try {
             validator.lengthRange.apply(name, [2, 40])
-            validator.lengthRange.apply(usern, [2, 40])
         } catch (err) {
             res.json({
                 msg: err
@@ -163,12 +161,12 @@ const middleware = (req, res, next) => {
             where: {
                 _id
             },
-            update: {
+            up: {
                 $set: {
                     name,
                 }
             },
-            option: {
+            opt: {
                 returnOriginal: false
             }
         }).then(({
@@ -183,6 +181,8 @@ const middleware = (req, res, next) => {
                 msg: `oops nothing changed maybe people not existent`
             })
         })
+
+
 
     } else if (req.query.setSkill) {
         let {
@@ -217,8 +217,8 @@ const middleware = (req, res, next) => {
                     attr
                 }
             },
-            opt:{
-                returnOriginal:false
+            opt: {
+                returnOriginal: false
             }
         }).then(({
             skill
@@ -229,25 +229,33 @@ const middleware = (req, res, next) => {
             })
         })
 
-    } else if (req.query.setTarget) {
+
+
+    } else if (req.query.setTar) {
         let {
             role_id,
             skill_id,
             value
-        } = req.bod.param
+        } = req.body.param
         // 可以考虑缓存一个_id的list用于检测各种是否存在
         let $set = {}
-        $set[`tarList.${skill_id}`] = value
-        model.role.updateOne({
+        $set[`tarList.${skill_id}`] = Number(value)
+        model.role.findOneAndUpdate({
             where: {
                 _id: role_id
             },
             up: {
                 $set
             }
-        })
-        res.json({
-            msg: 'ok'
+        }).then(() => {
+            res.json({
+                msg: 'ok'
+            })
+        }).catch(err => {
+            console.log(err)
+            res.json({
+                msg: err
+            })
         })
     }
 

@@ -21,6 +21,13 @@
                         dom.role_name.innerHTML = value.name
                         break
                     }
+                case 'skill':
+                    {
+                        dom.skill_name.innerHTML = value.name
+                        dom.skill_desc.innerHTML = value.desc
+                        dom.type.innerHTML = value.type
+                        break
+                    }
             }
         }
     })
@@ -40,24 +47,19 @@
         peo_name: document.querySelector('#curr [data-curr="peo_name"]'),
         peo_usern: document.querySelector('#curr [data-curr="peo_usern"]'),
         role_name: document.querySelector('#curr [data-curr="role_name"]'),
+        skill_name: document.querySelector('#curr [data-curr="skill_name"]'),
+        skill_desc: document.querySelector('#curr [data-curr="skill_desc"]'),
+        type: document.querySelector('[data-curr="type"]'),
         innerEdi: {}
     }
 
 
 
-    // leader和boss的init相似
+    // 所有用户的视图一样,数据不一样
     switch (parent.user.level) {
         case 'staff':
             {
-                curr.p = parent.user
-                resetRowList()
-                gridOptions.api.setRowData(window.rowList);
-                dom.table.style.width = '80%'
-                radarFrame.setAttribute('width', '80%')
-
-                dom.table.style.left = '1%'
-                radarFrame.style.left = '1%'
-                document.querySelector('aside.hidden').classList.add('hidden')
+                loadPeoList(window.parent.peoList)
                 break
             }
         case 'leader':
@@ -84,7 +86,10 @@
         if (p_id) {
             let p = parent.peoList.find(p => p._id == p_id)
             window.curr.peo = p;
-            window.curr.role = parent.roleList.find(r => r._id == p.role_id);
+            // 如果不存在,给curr分配一个虚拟role
+            window.curr.role = parent.roleList.find(r => r._id == p.role_id) || {
+                tarList: []
+            };
             resetRowList()
             gridOptions.api.setRowData(window.rowList);
             dom.table.focus()
@@ -104,7 +109,7 @@
     window.columnDefs = [{
         headerName: 'Competence',
         field: 'skill',
-        id: 'skill'
+        id: 'skill',
     }, {
         headerName: 'Type',
         field: 'type',
@@ -113,27 +118,45 @@
         field: 'role_tar',
         enableValue: true,
         // group后自动aggregate
-        aggFunc:'avg'
+        aggFunc: 'avg',
     }, {
+        cellStyle: {
+            'color': 'orange'
+        },
         headerName: 'My Target',
         field: 'my_tar',
         enableValue: true,
-        aggFunc:'avg'
+        aggFunc: 'avg'
     }, {
+        cellStyle: {
+            'color': 'orange'
+        },
         headerName: 'Actual Score',
         field: 'real',
         enableValue: true,
-        aggFunc:'avg'
+        aggFunc: 'avg'
     }, {
+        cellStyle: {
+            'color': 'orange'
+        },
         headerName: 'Action',
         field: 'act',
     }, {
+        cellStyle: {
+            'color': 'orange'
+        },
         headerName: 'Action Status',
         field: 'act_sta',
     }, {
+        cellStyle: {
+            'color': 'orange'
+        },
         headerName: 'Action Detail',
         field: 'act_de',
     }, {
+        cellStyle: {
+            'color': 'orange'
+        },
         headerName: 'Comment',
         field: 'comm',
     }]
@@ -163,8 +186,9 @@
             curr.row = event.data
             curr.node = event.node
             curr.skill = parent.skillList.find(s => s._id == event.data.skill_id)
-            if (event.column.colId == 'skill') openEdi('setSkill')
-            else openEdi('setRow')
+            let colId = event.column.colId
+            if (!['skill', 'type', 'role_tar'].includes(colId))
+                openEdi('setRow', colId)
         },
     };
 
@@ -173,9 +197,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         new agGrid.Grid(dom.table, gridOptions);
 
-        // curr.peo = parent.peoList[0]
         dom.peoList.children[0].click()
-
+        curr.skill = parent.skillList[0]
     });
 
 
@@ -261,6 +284,11 @@ function drawSkillRadar(segment = 7) {
 
 
 function drawTypeRadar(segment = 7) {
+
+    // 先对type列分组,然后读取所有的group node
+    let col = gridOptions.columnApi.getColumn("type");
+    gridOptions.columnApi.setRowGroupColumns([col]);
+
     dom.radar.style.display = 'flex'
     let radarList = []
 

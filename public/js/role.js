@@ -33,7 +33,6 @@
     window.rowList = []
 
     window.dom = {
-        type:document.querySelector('[data-curr="type"]'),
         peo_count: document.querySelector('[data-curr="peo_count"]'),
         radar: document.querySelector('#radar'),
         dot: document.querySelector('#dot'),
@@ -45,6 +44,7 @@
         role_name: document.querySelector('#curr [data-curr="role_name"]'),
         skill_name: document.querySelector('#curr [data-curr="skill_name"]'),
         skill_desc: document.querySelector('#curr [data-curr="skill_desc"]'),
+        type: document.querySelector('[data-curr="type"]'),
         innerEdi: {}
     }
 
@@ -100,12 +100,21 @@
     }, {
         headerName: 'Role Target',
         field: 'role_tar',
+        width: 170,
         enableValue: true,
         // group后自动aggregate
         aggFunc: 'avg',
         editable: true,
+        cellStyle: {
+            color: 'orange',
+            // 'background-color': 'green'
+        },
         onCellValueChanged: event => {
-            sendSetTar()
+            sendSetTar({
+                role_id: curr.role._id,
+                skill_id: event.data.skill_id,
+                value: event.newValue
+            })
         }
     }, {
         headerName: 'Personal Target Agg',
@@ -152,8 +161,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         new agGrid.Grid(dom.table, gridOptions);
 
-        // curr.role = parent.roleList[0]
-        dom.roleList.children[0].click()
+        if (parent.roleList.length > 0)
+            dom.roleList.children[0].click()
 
     });
 
@@ -209,13 +218,13 @@ function drawSkillRadar(segment = 7) {
                 fillColor: 'transparent',
                 lineWidth: 2
             }, {
-                name: 'personal target',
+                name: 'personal target agg',
                 value: [],
                 lineColor: "yellow",
                 fillColor: 'transparent',
                 lineWidth: 2
             }, {
-                name: 'actual',
+                name: 'actual agg',
                 value: [],
                 lineColor: "red",
                 fillColor: 'transparent',
@@ -226,8 +235,8 @@ function drawSkillRadar(segment = 7) {
             radar.maxValue.push(5)
             radar.description.push(row.skill)
             radar.inner[0].value.push(row.role_tar)
-            radar.inner[1].value.push(row.my_tar)
-            radar.inner[2].value.push(row.real)
+            radar.inner[1].value.push(row.my_tar_agg)
+            radar.inner[2].value.push(row.real_agg)
         })
         radarList.push(radar)
     }
@@ -240,6 +249,10 @@ function drawSkillRadar(segment = 7) {
 
 
 function drawTypeRadar(segment = 7) {
+
+    let col = gridOptions.columnApi.getColumn("type");
+    gridOptions.columnApi.setRowGroupColumns([col]);
+
     dom.radar.style.display = 'flex'
     let radarList = []
 
@@ -276,8 +289,8 @@ function drawTypeRadar(segment = 7) {
             radar.maxValue.push(5)
             radar.description.push(node.key)
             radar.inner[0].value.push(node.aggData.role_tar)
-            radar.inner[1].value.push(node.aggData.my_tar)
-            radar.inner[2].value.push(node.aggData.real)
+            radar.inner[1].value.push(node.aggData.my_tar_agg)
+            radar.inner[2].value.push(node.aggData.real_agg)
         })
         radarList.push(radar)
     }
@@ -317,7 +330,8 @@ function getAvg(list) {
     list.map(x => {
         all += x
     })
-    return (all / list.length).toFixed(1)
+    // 一元正号是转换其他对象到数值的最快方法，也是最推荐的做法
+    return +(all / list.length).toFixed(1)
 }
 
 
@@ -332,8 +346,9 @@ function resetRow(r) {
     } = r
     let skill = parent.skillList.find(s => s._id == skill_id)
     let row = {
-        skill: skill.name,
+        // 保留
         skill_id,
+        skill: skill.name,
         type: skill.type,
         role_tar: curr.role.tarList[skill_id],
         my_tar_agg,

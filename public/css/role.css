@@ -72,10 +72,9 @@ aside#curr {
 
 /* 添加用户 */
 #curr button {
-    width: 100%;
-    padding: 5px 8px;
+    margin: 10px 0;
     font-size: 18px;
-    align-self: center;
+    align-self: flex-start;
 }
 
 input[type=text],
