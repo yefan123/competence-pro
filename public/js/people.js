@@ -99,20 +99,14 @@
 
 
 
-
-
-    dom.table.focus()
-
-
-
-
     window.columnDefs = [{
         headerName: 'Competence',
         field: 'skill',
-        id: 'skill',
+        colId: 'skill',
     }, {
         headerName: 'Type',
         field: 'type',
+        colId: 'type',
     }, {
         headerName: 'Role Target',
         field: 'role_tar',
@@ -125,6 +119,7 @@
         },
         headerName: 'My Target',
         field: 'my_tar',
+        colId: 'my_tar',
         enableValue: true,
         aggFunc: 'avg'
     }, {
@@ -133,6 +128,7 @@
         },
         headerName: 'Actual Score',
         field: 'real',
+        colId: 'real',
         enableValue: true,
         aggFunc: 'avg'
     }, {
@@ -141,24 +137,28 @@
         },
         headerName: 'Action',
         field: 'act',
+        colId: 'act',
     }, {
         cellStyle: {
             'color': 'orange'
         },
         headerName: 'Action Status',
         field: 'act_sta',
+        colId: 'act_sta',
     }, {
         cellStyle: {
             'color': 'orange'
         },
         headerName: 'Action Detail',
         field: 'act_de',
+        colId: 'act_de',
     }, {
         cellStyle: {
             'color': 'orange'
         },
         headerName: 'Comment',
         field: 'comm',
+        colId: 'comm',
     }]
 
 
@@ -177,7 +177,7 @@
         getContextMenuItems,
         defaultColDef: {
             editable: false,
-            width: 140,
+            width: 150,
             enableRowGroup: true,
             enableValue: false,
         },
@@ -187,27 +187,22 @@
             curr.node = event.node
             curr.skill = parent.skillList.find(s => s._id == event.data.skill_id)
             let colId = event.column.colId
-            if (!['skill', 'type', 'role_tar'].includes(colId))
+            if (['my_tar', 'real', 'act', 'act_sta', 'act_de', 'comm'].includes(colId))
                 openEdi('setRow', colId)
         },
     };
 
 
-
+// init
     document.addEventListener('DOMContentLoaded', function () {
         new agGrid.Grid(dom.table, gridOptions);
 
         dom.peoList.children[0].click()
-        curr.skill = parent.skillList[0]
+        // curr.skill = parent.skillList[0]
     });
 
 
 })();
-
-// 可以叠加同一个事件
-
-
-
 
 function getContextMenuItems() {
 
@@ -351,6 +346,7 @@ function resetRowList(p = curr.peo) {
         })
         rowList.push(row)
     }
+    return window.rowList
 }
 
 

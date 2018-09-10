@@ -93,7 +93,7 @@
     window.columnDefs = [{
         headerName: 'Competence',
         field: 'skill',
-        id: 'skill'
+        colId: 'skill'
     }, {
         headerName: 'Type',
         field: 'type',

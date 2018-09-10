@@ -37,7 +37,7 @@ function openEdi(mode, focus) {
         edi.querySelector('.' + focus).focus()
 
     } else if (mode === 'addPeo') {
-        if (parent.user.level=='staff') {
+        if (parent.user.level == 'staff') {
             alert('permission denied')
             dom.edi.click()
             return
@@ -60,7 +60,7 @@ function openEdi(mode, focus) {
         edi.querySelector('.role_id').value = curr.role._id
 
     } else if (mode === 'addSkill') {
-        if (parent.user.level=='staff') {
+        if (parent.user.level !== 'boss') {
             alert('permission denied')
             dom.edi.click()
             return
@@ -72,7 +72,7 @@ function openEdi(mode, focus) {
         edi.querySelector('.name').focus()
 
     } else if (mode === 'setSkill') {
-        if (parent.user.level=='staff') {
+        if (parent.user.level !== 'boss') {
             alert('permission denied')
             dom.edi.click()
             return
@@ -95,11 +95,6 @@ function openEdi(mode, focus) {
         edi.querySelector('.name').focus()
 
     } else if (mode === 'setRole') {
-        if (!curr.role) {
-            alert('no role chosen')
-            dom.edi.click()
-            return
-        }
         let edi = dom.innerEdi.setRole
         window.curr.edi = edi
         edi.style.display = 'block'
@@ -255,10 +250,6 @@ function sendDropPeo(p = curr.peo) {
 
 
 function sendDropSkill() {
-    if (parent.user.level !== 'boss') {
-        alert('permission denied')
-        return
-    }
     if (!confirm(`CAUTION 
         R U SURE TO DROP ALL THE DATA & TARGET ABOUT SKILL '${curr.skill.name}' ANYWAY ??`)) return
 
@@ -302,6 +293,7 @@ function sendAddSkill() {
         if (msg === 'ok') {
             alert(`SKILL ADDED :\n${parent.format(skill)}`)
             parent.skillList.push(skill)
+            gridOptions.api.setRowData(resetRowList());
         } else {
             alert(msg)
         }

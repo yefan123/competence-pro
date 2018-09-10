@@ -100,8 +100,8 @@ const middleware = (req, res, next) => {
         pass_new = sha1(pass_new)
 
         try {
-            validator.lengthRange.apply(name, [2, 40])
-            validator.lengthRange.apply(usern, [2, 40])
+            validator.lengthRange.apply(name, [2, 50])
+            validator.lengthRange.apply(usern, [2, 50])
         } catch (err) {
             res.json({
                 msg: err
@@ -149,7 +149,7 @@ const middleware = (req, res, next) => {
         } = req.body.role
 
         try {
-            validator.lengthRange.apply(name, [2, 40])
+            validator.lengthRange.apply(name, [2, 50])
         } catch (err) {
             res.json({
                 msg: err
@@ -194,9 +194,9 @@ const middleware = (req, res, next) => {
         } = req.body.skill
 
         try {
-            validator.lengthRange.apply(name, [2, 40])
+            validator.lengthRange.apply(name, [2, 50])
             validator.lengthRange.apply(desc, [0, 500])
-            validator.lengthRange.apply(type, [0, 40])
+            validator.lengthRange.apply(type, [0, 50])
             validator.matchedRegexp.apply(attr, [/^(common|specific)$/])
         } catch (err) {
             res.json({

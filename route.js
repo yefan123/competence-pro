@@ -2,7 +2,10 @@
 module.exports = function route(app) {
 
     // 放在session中间件之前, 因为public资源不需要session
-    app.use(require('express').static(__dirname + '/public'))
+    app.use(require('express').static(__dirname + '/public', {
+        // 30 day cache
+        maxAge: 86400000 * 30
+    }))
 
     app.use(session({
         name: cfg.session.key, // 设置 cookie 中保存 session id 的字段名称

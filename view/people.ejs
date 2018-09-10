@@ -40,7 +40,7 @@
         <div data-curr="skill_desc" class="fas fa-star"></div>
         <div data-curr="type" class="fas fa-star"></div>
 
-        
+
         <button class="fas fa-chart-pie" onclick="drawSkillRadar(6)">radar on skill</button>
         <button class="fas fa-chart-pie" onclick="drawTypeRadar(6)">radar on type</button>
 
@@ -48,7 +48,7 @@
         <button id="setPeo" class="fas fa-cog" onclick="openEdi('setPeo')">set people</button>
 
         <button id="addSkill" class="fas fa-user-plus" onclick="openEdi('addSkill')">add skill</button>
-        <button id="setSkill" class="fas fa-cog" onclick="openEdi('setSkill')">set skill</button>
+        <button id="setSkill" class="fas fa-cog" onclick="if(curr.skill)openEdi('setSkill')">set skill</button>
 
     </aside>
 

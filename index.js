@@ -23,10 +23,6 @@
         skill: require('./model/skillModel')
     }
 
-
-
-
-
     app.set('views', './view/')
     app.set('view engine', 'ejs')
 
@@ -36,8 +32,6 @@
         useNewUrlParser: true,
         poolSize: 10
     }
-
-    // connection pool
     require('mongodb').MongoClient.connect(cfg.mongo.url, options, function (err, client) {
         if (err) throw err;
         // 全局的连接池?
@@ -45,9 +39,6 @@
     });
 
 
-
-    // 会在参数之间加空格...
-    // console.log('Source opened on GitHub:\n', pkg.homepage)
 
     // 开始路由
     require('./route')(app);

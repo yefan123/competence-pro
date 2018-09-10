@@ -26,9 +26,9 @@ const middleware = (req, res, next) => {
         } = req.body.peo
 
         try {
-            validator.lengthRange.apply(name, [3, 40])
-            validator.lengthRange.apply(usern, [3, 40])
-            validator.lengthRange.apply(pass, [3, Infinity])
+            validator.lengthRange.apply(name, [2, 50])
+            validator.lengthRange.apply(usern, [2, 50])
+            validator.lengthRange.apply(pass, [2, Infinity])
             validator.matchedRegexp.apply(level, [/^(staff|leader)$/])
         } catch (err) {
             res.json({
@@ -109,8 +109,8 @@ const middleware = (req, res, next) => {
         }
 
         try {
-            validator.lengthRange.apply(name, [3, 40])
-            validator.lengthRange.apply(type, [3, 40])
+            validator.lengthRange.apply(name, [2, 50])
+            validator.lengthRange.apply(type, [2, 50])
             validator.lengthRange.apply(desc, [0, 500])
             validator.matchedRegexp.apply(attr, [/^(common|specific)$/])
         } catch (err) {
@@ -200,7 +200,7 @@ const middleware = (req, res, next) => {
 
 
         try {
-            validator.lengthRange.apply(name, [3, 40])
+            validator.lengthRange.apply(name, [2, 50])
         } catch (err) {
             res.json({
                 msg: err
