@@ -92,6 +92,7 @@
             };
             resetRowList()
             gridOptions.api.setRowData(window.rowList);
+            fitAllCols()
             dom.table.focus()
         }
     })
@@ -107,6 +108,10 @@
         headerName: 'Type',
         field: 'type',
         colId: 'type',
+    }, {
+        headerName: 'Attribute',
+        field: 'attr',
+        colId: 'attr',
     }, {
         headerName: 'Role Target',
         field: 'role_tar',
@@ -166,7 +171,7 @@
 
     window.gridOptions = {
         columnDefs,
-        showToolPanel: false,
+        sideBar: false,
         animateRows: true,
         enableRangeSelection: true,
         rowData: null,
@@ -193,7 +198,7 @@
     };
 
 
-// init
+    // init
     document.addEventListener('DOMContentLoaded', function () {
         new agGrid.Grid(dom.table, gridOptions);
 
@@ -211,7 +216,10 @@ function getContextMenuItems() {
 
 
 
-
+function fitAllCols() {
+    let allColumnIds = gridOptions.columnApi.getAllColumns().map(c => c.colId)
+    gridOptions.columnApi.autoSizeColumns(allColumnIds);
+}
 
 
 // refresh people list aside
@@ -236,6 +244,7 @@ function drawSkillRadar(segment = 7) {
     dom.radar.style.display = 'flex'
 
     let radarList = []
+    // 考虑改成通过api读取node
     let rowList = window.rowList
     for (let i = 0; i < rowList.length; i += segment) {
         let radar = {
@@ -264,9 +273,9 @@ function drawSkillRadar(segment = 7) {
         rowList.slice(i, i + segment).forEach(row => {
             radar.maxValue.push(5)
             radar.description.push(row.skill)
-            radar.inner[0].value.push(row.role_tar)
-            radar.inner[1].value.push(row.my_tar)
-            radar.inner[2].value.push(row.real)
+            radar.inner[0].value.push(+row.role_tar)
+            radar.inner[1].value.push(+row.my_tar)
+            radar.inner[2].value.push(+row.real)
         })
         radarList.push(radar)
     }
@@ -289,7 +298,8 @@ function drawTypeRadar(segment = 7) {
 
     let groupNodeList = []
     gridOptions.api.forEachNode(node => {
-        if (node.group) groupNodeList.push(node)
+        // 属于group node且没有被过滤(隐藏)的node
+        if (node.group && node.aggData) groupNodeList.push(node)
     })
 
     for (let i = 0; i < groupNodeList.length; i += segment) {
@@ -316,6 +326,7 @@ function drawTypeRadar(segment = 7) {
                 lineWidth: 2
             }]
         }
+        // console.log(groupNodeList)
         groupNodeList.slice(i, i + segment).forEach(node => {
             radar.maxValue.push(5)
             radar.description.push(node.key)
@@ -351,6 +362,7 @@ function resetRowList(p = curr.peo) {
 
 
 // peo的row转ui的row
+// 主要是将skill_id衍生出skill,type,role_tar,attr等
 function resetRow(r) {
     let {
         skill_id,
@@ -366,6 +378,7 @@ function resetRow(r) {
         skill: skill.name,
         skill_id,
         type: skill.type,
+        attr: skill.attr,
         role_tar: curr.role.tarList[skill_id],
         my_tar,
         real,

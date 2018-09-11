@@ -94,12 +94,14 @@ const middleware = (req, res, next) => {
             usern,
             pass_old,
             pass_new,
-            role_id
+            role_id,
         } = req.body.peo
         pass_old = sha1(pass_old)
         pass_new = sha1(pass_new)
+        usern = usern.toLowerCase()
 
         try {
+            permission.deny.apply(user, ['staff'])
             validator.lengthRange.apply(name, [2, 50])
             validator.lengthRange.apply(usern, [2, 50])
         } catch (err) {
@@ -116,7 +118,7 @@ const middleware = (req, res, next) => {
             },
             up: {
                 $set: {
-                    name: name.toLowerCase(),
+                    name,
                     usern,
                     pass: pass_new,
                     role_id
@@ -194,6 +196,7 @@ const middleware = (req, res, next) => {
         } = req.body.skill
 
         try {
+            permission.allow.apply(user, ['boss'])
             validator.lengthRange.apply(name, [2, 50])
             validator.lengthRange.apply(desc, [0, 500])
             validator.lengthRange.apply(type, [0, 50])

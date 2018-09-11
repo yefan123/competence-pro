@@ -4,10 +4,6 @@ const router = express.Router()
 const ObjectID = require('mongodb').ObjectID;
 const sha1 = require('sha1')
 
-// 注意和表单parser不同(urlencode)
-const bodyJsonParser = require("body-parser").json()
-
-
 const middleware = (req, res, next) => {
 
     const user = req.session.user
@@ -15,8 +11,6 @@ const middleware = (req, res, next) => {
 
     // 添加peo
     if (req.query.addPeo) {
-        if (user.level == 'staff') return
-
         let {
             name,
             usern,
@@ -24,11 +18,13 @@ const middleware = (req, res, next) => {
             role_id,
             level
         } = req.body.peo
+        usern = usern.toLowerCase()
 
         try {
+            permission.deny.apply(user, ['staff'])
+            // 不用检测pass,因为sha1之后是固定长
             validator.lengthRange.apply(name, [2, 50])
             validator.lengthRange.apply(usern, [2, 50])
-            validator.lengthRange.apply(pass, [2, Infinity])
             validator.matchedRegexp.apply(level, [/^(staff|leader)$/])
         } catch (err) {
             res.json({
@@ -37,14 +33,12 @@ const middleware = (req, res, next) => {
             return
         }
 
-
         // 可以做一个role的存在性检测
-
         model.peo.insertOne({
             what: {
                 _id: new ObjectID().toString(),
                 name,
-                usern: usern.toLowerCase(),
+                usern,
                 pass: sha1(pass),
                 role_id,
                 level,
@@ -62,6 +56,8 @@ const middleware = (req, res, next) => {
         })
 
 
+
+        
         // 删除peo
     } else if (req.query.dropPeo) {
 
@@ -70,16 +66,21 @@ const middleware = (req, res, next) => {
         // great operation
         peo.dept = user.dept
 
-        if (peo.level == 'boss') {
+        try {
+            permission.deny.apply(peo, ['boss'])
+            permission.deny.apply(user, ['staff'])
+        } catch (err) {
             res.json({
-                msg: 'permission denied'
+                msg: err
             })
             return
         }
+
         model.peo.findOneAndDelete({
             where: {
                 _id: peo._id,
-                dept: peo.dept
+                dept: peo.dept,
+                level: peo.level
             }
         }).then(({
             peo
@@ -102,13 +103,8 @@ const middleware = (req, res, next) => {
             attr
         } = req.body.skill
 
-
-        if (req.session.user.level !== 'boss') {
-            res.status(403).end()
-            return
-        }
-
         try {
+            permission.allow.apply(user, ['boss'])
             validator.lengthRange.apply(name, [2, 50])
             validator.lengthRange.apply(type, [2, 50])
             validator.lengthRange.apply(desc, [0, 500])

@@ -40,12 +40,12 @@ function middleware(req, res, next) {
             pass
         } = req.body.user
 
-
-        peopleModel.login({
+        model.peo.login({
             // js的数据类型一定要和mongo中的一致
-            // 用户名和密码统一用string吧, 省的以后麻烦
-            usern: usern.toLowerCase(),
-            pass
+            user: {
+                usern: usern.toLowerCase(),
+                pass
+            }
         }).then(({
             user
         }) => {

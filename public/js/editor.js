@@ -9,7 +9,10 @@
     })
 
     document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') dom.edi.click()
+        if (e.key === 'Escape') {
+            dom.edi.click()
+            dom.radar.ondblclick()
+        }
     })
 
 })();
@@ -50,13 +53,18 @@ function openEdi(mode, focus) {
         edi.querySelector('.name').focus()
 
     } else if (mode === 'setPeo') {
+        if (parent.user.level == 'staff') {
+            alert('permission denied')
+            dom.edi.click()
+            return
+        }
         let edi = dom.innerEdi.setPeo
         window.curr.edi = edi
         edi.querySelector('select.role_id').innerHTML = parent.roleList.map(r => `<option value="${r._id}">${r.name}</option>`)
         edi.style.display = 'block'
         edi.querySelector('.name').value = curr.peo.name
         edi.querySelector('.usern').value = curr.peo.usern
-        edi.querySelector('.usern').value = curr.peo.usern
+        edi.querySelector('.level').value = curr.peo.level
         edi.querySelector('.role_id').value = curr.role._id
 
     } else if (mode === 'addSkill') {
@@ -220,10 +228,6 @@ function sendSetPeo() {
 // 删除员工
 function sendDropPeo(p = curr.peo) {
     if (!p) return
-    if (p.level == 'boss') {
-        alert('sorry but root account cannot be deleted :(')
-        return
-    }
     if (!confirm(`CAUTION THIS OPERATION IS IRREVERSIBLE !!
         R U SURE TO DELETE ${p.level.toUpperCase()} '${p.name}' ANYWAY ??`)) return
 

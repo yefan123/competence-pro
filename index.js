@@ -6,7 +6,7 @@
 
     global.session = require('express-session');
     global.mongoStore = require('connect-mongo')(session)
-    
+
     global.bodyJsonParser = require("body-parser").json()
 
 
@@ -14,8 +14,10 @@
 
     global.app = require('express')()
 
+    // tool
     global.checkLogin = require('./tool/checkLogin')
     global.validator = require('./tool/validator')
+    global.permission = require('./tool/permission')
 
     global.model = {
         peo: require('./model/peopleModel'),

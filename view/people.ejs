@@ -126,13 +126,15 @@
             </select>
             <br>
             <label for="">level :</label>
-            <select type='text' class="level">
+            <select class="level">
                 <option value="staff">employee</option>
                 <option value="leader">manager</option>
             </select>
             <br>
             <button onclick="sendAddPeo()" class="submit left">Submit</button>
         </div>
+
+
 
 
         <div data-edi="addSkill" class="innerEdi">
@@ -162,6 +164,8 @@
         </div>
 
 
+
+
         <div data-edi="setPeo" class="innerEdi">
             <div class="edi_title">PEOPLE SETTING</div>
 
@@ -171,21 +175,24 @@
             </div>
             <div>
                 <label for="">username :</label>
-                <input type='text' class="usern" readonly>
+                <input type='text' class="usern">
             </div>
+            <!-- for security ! -->
             <div>
-
                 <label for="">old password :</label>
                 <input type='password' class="pass_old">
             </div>
             <div>
-
                 <label for="">new password :</label>
                 <input type='password' class="pass_new">
             </div>
             <div>
                 <label for="">role :</label>
                 <select class="role_id"></select>
+            </div>
+            <div>
+                <label>level :</label>
+                <input type="text" class="level" readonly>
             </div>
             <br>
             <button onclick="sendSetPeo()" class="submit left">Submit</button>

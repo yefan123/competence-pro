@@ -15,7 +15,6 @@
 </head>
 
 <body>
-
     <header>
         <br>
         <br>
@@ -78,12 +77,16 @@
 
 
 
-    <script src="/CryptoJS/rollups/sha1.js"></script>
     <script src="/node_modules/browser-detect/dist/browser-detect.umd.js"></script>
+
+    <script>
+        if (browserDetect().name == 'ie') document.body.innerHTML =
+            '<h1>Oops Seems ur Using SHITTY Internet Explorer</h1><br><h2>Get a Chrome r Firefox Plz :-)</h2>'
+    </script>
+
+    <script src="/CryptoJS/rollups/sha1.js"></script>
     <script src="/js/login.js"></script>
-
-
-
+    
 </body>
 
 </html>

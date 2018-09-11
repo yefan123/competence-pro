@@ -82,6 +82,7 @@
             curr.role = parent.roleList.find(r => r._id == _id);
             resetRowList()
             gridOptions.api.setRowData(window.rowList);
+            fitAllCols()
             dom.table.focus()
         }
     })
@@ -97,6 +98,10 @@
     }, {
         headerName: 'Type',
         field: 'type',
+    }, {
+        headerName: 'Attribute',
+        field: 'attr',
+        colId: 'attr',
     }, {
         headerName: 'Role Target',
         field: 'role_tar',
@@ -133,7 +138,7 @@
 
     window.gridOptions = {
         columnDefs,
-        showToolPanel: false,
+        sideBar: false,
         animateRows: true,
         enableRangeSelection: true,
         rowData: null,
@@ -179,6 +184,10 @@ function getContextMenuItems() {
 }
 
 
+function fitAllCols() {
+    let allColumnIds = gridOptions.columnApi.getAllColumns().map(c => c.colId)
+    gridOptions.columnApi.autoSizeColumns(allColumnIds);
+}
 
 
 
@@ -258,7 +267,7 @@ function drawTypeRadar(segment = 7) {
 
     let groupNodeList = []
     gridOptions.api.forEachNode(node => {
-        if (node.group) groupNodeList.push(node)
+        if (node.group && node.aggData) groupNodeList.push(node)
     })
 
     for (let i = 0; i < groupNodeList.length; i += segment) {
@@ -350,6 +359,7 @@ function resetRow(r) {
         skill_id,
         skill: skill.name,
         type: skill.type,
+        attr: skill.attr,
         role_tar: curr.role.tarList[skill_id],
         my_tar_agg,
         real_agg,

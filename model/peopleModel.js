@@ -7,7 +7,9 @@ const url = global.cfg.mongoUrl;
 // 此处看似里入口(index.js)好远(两次跳转), 但仍然属于同步流, 执行先于较早定义的异步函数
 
 module.exports = {
-    login: user => new Promise((res, rej) => {
+    login: ({
+        user
+    }) => new Promise((res, rej) => {
         // 更新并返回更新前的数据
         db.collection("people").findOneAndUpdate(user, {
             $set: {
@@ -67,7 +69,10 @@ module.exports = {
         })
     }),
 
-    updateMany: ({where, up}) => new Promise((resolve, reject) => {
+    updateMany: ({
+        where,
+        up
+    }) => new Promise((resolve, reject) => {
         db.collection('people').updateMany(where, up, (err, log) => {
             log.__proto__.toJSON = undefined
             if (err) reject(err)
