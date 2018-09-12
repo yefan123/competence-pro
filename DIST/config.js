@@ -9,6 +9,7 @@ module.exports = {
     server: {
         port: 80,
         ip: '10.88.33.124',
+        domain: 'naaslxrgedcom01.bsh.corp.bshg.com',
         username: 'bshg',
         password: 'Supcr5@z'
     },

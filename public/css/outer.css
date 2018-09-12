@@ -33,7 +33,6 @@ header {
     white-space: nowrap;
     height: 100%;
     position: relative;
-    line-height: 75px;
     width: 16.6%;
     cursor: pointer;
 }

@@ -84,6 +84,8 @@
             gridOptions.api.setRowData(window.rowList);
             fitAllCols()
             dom.table.focus()
+            gridOptions.api.getFilterInstance('role_tar').unselectValue(null)
+            gridOptions.api.onFilterChanged()
         }
     })
 
@@ -215,8 +217,11 @@ function drawSkillRadar(segment = 7) {
     dom.radar.style.display = 'flex'
 
     let radarList = []
-    let rowList = window.rowList
-    for (let i = 0; i < rowList.length; i += segment) {
+    const nodeList = []
+    gridOptions.api.forEachNodeAfterFilter(node => {
+        if (!node.group) nodeList.push(node)
+    })
+    for (let i = 0; i < nodeList.length; i += segment) {
         let radar = {
             maxValue: [],
             description: [],
@@ -240,12 +245,12 @@ function drawSkillRadar(segment = 7) {
                 lineWidth: 2
             }]
         }
-        rowList.slice(i, i + segment).forEach(row => {
+        nodeList.slice(i, i + segment).forEach(node => {
             radar.maxValue.push(5)
-            radar.description.push(row.skill)
-            radar.inner[0].value.push(row.role_tar)
-            radar.inner[1].value.push(row.my_tar_agg)
-            radar.inner[2].value.push(row.real_agg)
+            radar.description.push(node.data.skill)
+            radar.inner[0].value.push(node.data.role_tar)
+            radar.inner[1].value.push(node.data.my_tar_agg)
+            radar.inner[2].value.push(node.data.real_agg)
         })
         radarList.push(radar)
     }
@@ -266,8 +271,8 @@ function drawTypeRadar(segment = 7) {
     let radarList = []
 
     let groupNodeList = []
-    gridOptions.api.forEachNode(node => {
-        if (node.group && node.aggData) groupNodeList.push(node)
+    gridOptions.api.forEachNodeAfterFilter(node => {
+        if (node.group) groupNodeList.push(node)
     })
 
     for (let i = 0; i < groupNodeList.length; i += segment) {
