@@ -35,6 +35,7 @@ function middleware(req, res, next) {
     // login
     if (req.query.login) {
 
+        // pass在前端被sha1
         const {
             usern,
             pass
