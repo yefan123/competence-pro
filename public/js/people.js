@@ -247,7 +247,7 @@ function drawSkillRadar(segment = 7) {
 
     const radarList = []
     const nodeList = []
-    gridOptions.api.forEachNodeAfterFilter(node => {
+    gridOptions.api.forEachNodeAfterFilterAndSort(node => {
         if (!node.group) nodeList.push(node)
     })
     for (let i = 0; i < nodeList.length; i += segment) {
@@ -301,7 +301,7 @@ function drawTypeRadar(segment = 7) {
     let radarList = []
 
     let groupNodeList = []
-    gridOptions.api.forEachNodeAfterFilter(node => {
+    gridOptions.api.forEachNodeAfterFilterAndSort(node => {
         // 过滤掉的group node没有aggData字段
         if (node.group) groupNodeList.push(node)
     })
